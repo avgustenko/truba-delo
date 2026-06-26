@@ -1,0 +1,2882 @@
+<!DOCTYPE html>
+<html lang="ru" class="scroll-smooth">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Отчет по производственной практике | Муртазин Артем | РЕК-302</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+    
+    <!-- Tailwind CSS v4 via CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
+    
+    <!-- Font Awesome Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    
+    <!-- Chart.js CDN -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <style type="text/css">
+        :root {
+            --primary: #3498DB;           /* Светло-синий для темной темы */
+            --primary-dark: #1E5A8E;      /* Основной синий */
+            --primary-light: #5DADE2;     /* Яркий акцентный синий */
+            --accent: #FF6B35;            /* Насыщенный оранжевый */
+            --accent-light: #FF8C5A;      /* Светло-оранжевый */
+            --bg-light: #0B132B;          /* Глубокий полночно-синий (основной фон) */
+            --bg-white: #111C30;          /* Тёмно-синий фон карточек и секций */
+            --bg-card-alt: #16253F;       /* Промежуточный тёмный */
+            --text-dark: #F8FAFC;         /* Основной светлый текст */
+            --text-gray: #94A3B8;         /* Вторичный серый текст */
+            --success: #2ECC71;           /* Зеленый */
+            --warning: #F1C40F;           /* Желтый */
+            --danger: #E74C3C;            /* Красный */
+            --border-color: rgba(255, 255, 255, 0.08);
+        }
+
+        @theme {
+            --color-primary: #3498DB;
+            --color-primary-dark: #1E5A8E;
+            --color-primary-light: #5DADE2;
+            --color-accent: #FF6B35;
+            --color-accent-light: #FF8C5A;
+            --color-bg-light: #0B132B;
+            --color-bg-white: #111C30;
+            --color-bg-card-alt: #16253F;
+            --color-text-dark: #F8FAFC;
+            --color-text-gray: #94A3B8;
+            --color-success: #2ECC71;
+            --color-warning: #F1C40F;
+            --color-danger: #E74C3C;
+            --font-display: 'Montserrat', sans-serif;
+            --font-sans: 'Inter', sans-serif;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            color: var(--text-dark);
+            background-color: var(--bg-light);
+            overflow-x: hidden;
+        }
+
+        h1, h2, h3, h4, h5, h6 {
+            font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Scroll progress bar */
+        #progress-bar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 5px;
+            background: linear-gradient(to right, var(--accent), var(--accent-light));
+            width: 0%;
+            z-index: 1000;
+            transition: width 0.1s ease;
+        }
+
+        /* Smooth scroll-up button */
+        #to-top-btn {
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            background-color: var(--accent);
+            color: white;
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+            cursor: pointer;
+            z-index: 99;
+            opacity: 0;
+            transform: translateY(20px);
+            transition: all 0.3s ease;
+        }
+
+        #to-top-btn.show {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        #to-top-btn:hover {
+            background-color: var(--accent-light);
+            transform: scale(1.1);
+        }
+
+        /* Wave and geometric animations in Hero */
+        @keyframes float {
+            0% { transform: translateY(0px) rotate(0deg); }
+            50% { transform: translateY(-15px) rotate(5deg); }
+            100% { transform: translateY(0px) rotate(0deg); }
+        }
+
+        .animated-bg-shape {
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .animated-bg-shape:nth-child(2) {
+            animation-delay: 2s;
+            animation-duration: 10s;
+        }
+
+        .animated-bg-shape:nth-child(3) {
+            animation-delay: 4s;
+            animation-duration: 12s;
+        }
+
+        /* Scroll animation states */
+        .reveal {
+            opacity: 0;
+            transform: translateY(40px);
+            transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+
+        .reveal.active {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        /* Custom list style */
+        .checkmark-list li {
+            position: relative;
+            padding-left: 30px;
+            margin-bottom: 12px;
+        }
+
+        .checkmark-list li::before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: var(--success);
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        /* Organization Tree Line Helpers */
+        .tree-node {
+            position: relative;
+            transition: all 0.3s ease;
+        }
+        
+        .tree-node:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+
+        /* Custom scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+        ::-webkit-scrollbar-track {
+            background: var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb {
+            background: var(--primary-dark);
+            border-radius: 5px;
+            border: 2px solid var(--bg-light);
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--primary);
+        }
+    </style>
+</head>
+<body class="bg-bg-light text-slate-100 selection:bg-orange-500 selection:text-white">
+
+    <!-- Scroll Progress Bar -->
+    <div id="progress-bar"></div>
+
+    <!-- Sticky Navigation for Dark Theme -->
+    <header class="sticky top-0 bg-[#0B132B]/90 backdrop-blur-md border-b border-white/10 z-50 shadow-md hidden md:block">
+        <div class="max-w-7xl mx-auto px-4 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <div class="bg-primary-dark text-white p-2 rounded-lg flex items-center justify-center">
+                    <i class="fa-solid fa-faucet-drip text-xl text-orange-400"></i>
+                </div>
+                <div>
+                    <span class="font-display font-black text-white tracking-wide">ТРУБА-ДЕЛО</span>
+                    <span class="text-xs block text-slate-400 leading-none">ПРАКТИКА 2026</span>
+                </div>
+            </div>
+            
+            <!-- Quick Anchor Navigation -->
+            <nav class="flex flex-wrap gap-1 lg:gap-2 text-xs font-semibold">
+                <a href="#hero" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Введение</a>
+                <a href="#about" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Компания</a>
+                <a href="#goals" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Задачи</a>
+                <a href="#structure" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Оргструктура</a>
+                <a href="#indicators" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Показатели</a>
+                <a href="#marketing" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Реклама</a>
+                <a href="#swot" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">SWOT</a>
+                <a href="#pest" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">PEST</a>
+                <a href="#sales" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Продажи</a>
+                <a href="#abc" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">ABC</a>
+                <a href="#xyz" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">XYZ</a>
+                <a href="#abcxyz" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Матрица</a>
+                <a href="#channels" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">ROI</a>
+                <a href="#breakeven" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Точка безубыточности</a>
+                <a href="#survey" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Опрос</a>
+                <a href="#recommendations" class="px-2 py-1.5 rounded-md hover:bg-white/10 text-slate-300 transition">Выводы</a>
+            </nav>
+        </div>
+    </header>
+
+    <!-- SECTION 1: HERO (Main background with dark theme accents) -->
+    <section id="hero" class="relative min-h-screen flex items-center justify-center bg-gradient-to-b from-[#090F1E] to-[#111C30] text-white overflow-hidden py-16 px-4">
+        <!-- Abstract Shapes -->
+        <div class="absolute inset-0 z-0 pointer-events-none opacity-15">
+            <svg class="animated-bg-shape absolute top-10 left-10 w-96 h-96 text-primary-light" viewBox="0 0 200 200" fill="currentColor">
+                <circle cx="100" cy="100" r="80"/>
+            </svg>
+            <svg class="animated-bg-shape absolute bottom-10 right-10 w-[500px] h-[500px] text-primary" viewBox="0 0 200 200" fill="currentColor">
+                <path d="M40,-60C50,-48,56,-32,60,-15C64,2,65,20,58,34C51,48,35,59,18,65C1,71,-17,73,-32,66C-47,60,-59,46,-65,30C-71,14,-72,-3,-67,-19C-62,-34,-51,-47,-38,-59C-25,-71,-12,-81,2,-84C16,-87,31,-82,40,-60Z" transform="translate(100 100)" />
+            </svg>
+            <svg class="animated-bg-shape absolute top-1/2 left-1/3 w-80 h-80 text-primary-dark" viewBox="0 0 200 200" fill="currentColor">
+                <rect x="30" y="30" width="140" height="140" rx="30" transform="rotate(45 100 100)"/>
+            </svg>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center justify-between min-h-[80vh]">
+            <div class="w-full">
+                <!-- College Name -->
+                <p class="text-sm md:text-base font-medium tracking-widest text-primary-light mb-6 uppercase animate-fade-in">
+                    ГАПОУ СО «Колледж управления и сервиса «Стиль»
+                </p>
+                
+                <!-- Main Title -->
+                <h1 class="text-4xl md:text-6xl lg:text-7xl font-extrabold tracking-tight font-display text-white mb-6 leading-tight drop-shadow-lg">
+                    ОТЧЕТ ПО ПРОИЗВОДСТВЕННОЙ ПРАКТИКЕ
+                </h1>
+                
+                <!-- Subtitle -->
+                <p class="text-lg md:text-2xl text-orange-200 max-w-3xl mx-auto mb-8 font-light">
+                    ПМ 04 «Организация и управление персоналом изготовления рекламного продукта»
+                </p>
+                
+                <!-- Divider Line -->
+                <div class="w-24 h-1.5 bg-accent mx-auto mb-12 rounded-full"></div>
+            </div>
+
+            <!-- Two Columns Student Info -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 w-full max-w-4xl text-left bg-white/5 backdrop-blur-md p-6 md:p-8 rounded-2xl border border-white/10 mb-12 shadow-2xl">
+                <!-- Left Column -->
+                <div class="space-y-3 border-r border-white/10 pr-0 md:pr-8">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-user-graduate text-accent text-xl"></i>
+                        <span class="text-sm text-primary-light">Студент</span>
+                    </div>
+                    <p class="text-lg md:text-xl font-bold font-display text-white">Муртазин Артем</p>
+                    <p class="text-sm text-slate-300">Группа: <strong class="font-semibold text-white">РЕК-302</strong></p>
+                    <p class="text-sm text-slate-300">Специальность: <br><strong class="font-semibold text-white">42.02.01 «Реклама»</strong></p>
+                </div>
+                
+                <!-- Right Column -->
+                <div class="space-y-3 pl-0 md:pl-8">
+                    <div class="flex items-center gap-3">
+                        <i class="fa-solid fa-building text-accent text-xl"></i>
+                        <span class="text-sm text-primary-light">База практики</span>
+                    </div>
+                    <p class="text-lg md:text-xl font-bold font-display text-white">ООО «Труба-Дело»</p>
+                    <p class="text-sm text-slate-300">Период: <strong class="font-semibold text-white">08 - 27 июня 2026 г.</strong></p>
+                    <p class="text-sm text-slate-300">Руководитель практики: <br><strong class="font-semibold text-white">Шурц Ю.А.</strong></p>
+                </div>
+            </div>
+
+            <!-- Scroll Down Button -->
+            <a href="#about" class="inline-flex flex-col items-center gap-2 text-white font-medium hover:text-accent transition duration-300 group">
+                <span class="text-sm tracking-wider uppercase">Узнать больше</span>
+                <div class="w-10 h-10 rounded-full border border-white/20 flex items-center justify-center bg-white/5 group-hover:border-accent group-hover:bg-accent/10 transition bounce duration-1000 animate-bounce">
+                    <i class="fa-solid fa-arrow-down"></i>
+                </div>
+            </a>
+        </div>
+    </section>
+
+    <!-- SECTION 2: ABOUT COMPANY (Dark Background) -->
+    <section id="about" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">ХАРАКТЕРИСТИКА ПРЕДПРИЯТИЯ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display leading-tight mb-4">
+                    ООО «ТРУБА-ДЕЛО» — 20 ЛЕТ НА РЫНКЕ ЕКАТЕРИНБУРГА
+                </h2>
+                <p class="text-lg md:text-xl text-slate-400 max-w-2xl mx-auto">
+                    Ведущая аварийно-сантехническая служба города, предоставляющая полный спектр инженерных и сервисных услуг с 2006 года.
+                </p>
+            </div>
+
+            <!-- Block 1: Enterprise Card (Dark slate card backgrounds) -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-stretch mb-20">
+                <!-- Info list (Left) -->
+                <div class="bg-bg-white p-8 md:p-10 rounded-2xl border border-white/10 shadow-xl flex flex-col justify-between reveal">
+                    <h3 class="text-2xl font-bold text-white font-display mb-6 flex items-center gap-3">
+                        <i class="fa-solid fa-file-invoice text-accent"></i> Регистрационные и общие данные
+                    </h3>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 gap-6">
+                        <div class="flex items-start gap-3">
+                            <div class="text-primary text-xl mt-1"><i class="fa-solid fa-calendar-days"></i></div>
+                            <div>
+                                <span class="text-xs text-slate-400 block uppercase font-bold">Год основания</span>
+                                <span class="font-semibold text-white">12 октября 2006 года</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="text-primary text-xl mt-1"><i class="fa-solid fa-hashtag"></i></div>
+                            <div>
+                                <span class="text-xs text-slate-400 block uppercase font-bold">ИНН компании</span>
+                                <span class="font-semibold text-white">6670144841</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="text-primary text-xl mt-1"><i class="fa-solid fa-user-tie"></i></div>
+                            <div>
+                                <span class="text-xs text-slate-400 block uppercase font-bold">Генеральный директор</span>
+                                <span class="font-semibold text-white">Зубарев Иван Дмитриевич</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="text-primary text-xl mt-1"><i class="fa-solid fa-location-dot"></i></div>
+                            <div>
+                                <span class="text-xs text-slate-400 block uppercase font-bold">Юридический адрес</span>
+                                <span class="font-semibold text-white">г. Екатеринбург, ул. Ботаническая, 28</span>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="text-primary text-xl mt-1"><i class="fa-solid fa-globe"></i></div>
+                            <div>
+                                <span class="text-xs text-slate-400 block uppercase font-bold">Корпоративный сайт</span>
+                                <a href="https://truba-delo.ru" target="_blank" class="font-semibold text-accent hover:underline">truba-delo.ru</a>
+                            </div>
+                        </div>
+                        <div class="flex items-start gap-3">
+                            <div class="text-primary text-xl mt-1"><i class="fa-solid fa-users"></i></div>
+                            <div>
+                                <span class="text-xs text-slate-400 block uppercase font-bold">Штат сотрудников</span>
+                                <span class="font-semibold text-white">50 квалифицированных специалистов</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Three Big Figures (Right, beautifully glowing) -->
+                <div class="grid grid-cols-1 sm:grid-cols-3 lg:grid-cols-1 gap-6 reveal">
+                    <!-- Stat Card 1 -->
+                    <div class="bg-gradient-to-r from-primary-dark to-primary text-white p-8 rounded-2xl shadow-lg flex items-center justify-between group hover:translate-y-[-5px] transition duration-300">
+                        <div>
+                            <span class="text-blue-100 text-xs uppercase font-bold tracking-wider">Выполнено работ</span>
+                            <h3 class="text-4xl lg:text-5xl font-black font-display mt-2 tracking-tight">
+                                <span class="counter" data-target="110000">0</span>+
+                            </h3>
+                        </div>
+                        <div class="bg-white/10 w-16 h-16 rounded-xl flex items-center justify-center text-accent text-3xl">
+                            <i class="fa-solid fa-circle-check"></i>
+                        </div>
+                    </div>
+                    <!-- Stat Card 2 -->
+                    <div class="bg-gradient-to-r from-accent to-accent-light text-white p-8 rounded-2xl shadow-lg flex items-center justify-between group hover:translate-y-[-5px] transition duration-300">
+                        <div>
+                            <span class="text-orange-100 text-xs uppercase font-bold tracking-wider">Постоянных клиентов</span>
+                            <h3 class="text-4xl lg:text-5xl font-black font-display mt-2 tracking-tight">
+                                <span class="counter" data-target="100000">0</span>+
+                            </h3>
+                        </div>
+                        <div class="bg-white/10 w-16 h-16 rounded-xl flex items-center justify-center text-white text-3xl">
+                            <i class="fa-solid fa-handshake"></i>
+                        </div>
+                    </div>
+                    <!-- Stat Card 3 -->
+                    <div class="bg-bg-white border border-white/10 text-white p-8 rounded-2xl shadow-lg flex items-center justify-between group hover:translate-y-[-5px] hover:border-primary/20 transition duration-300">
+                        <div>
+                            <span class="text-slate-400 text-xs uppercase font-bold tracking-wider">Рейтинг компании</span>
+                            <h3 class="text-4xl lg:text-5xl font-black font-display mt-2 tracking-tight text-primary">
+                                <span class="counter-float" data-target="4.8">0</span>/5
+                            </h3>
+                        </div>
+                        <div class="text-yellow-500 text-4xl">
+                            <i class="fa-solid fa-star"></i>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 2: Services (4 cards in a row - dark) -->
+            <div class="reveal">
+                <h3 class="text-2xl font-black text-white font-display mb-8 text-center">Основные направления деятельности и структура выручки</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Service 1 -->
+                    <div class="bg-bg-white border border-white/5 rounded-2xl p-6 shadow-md hover:shadow-lg hover:translate-y-[-5px] transition duration-300 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-red-600 text-white font-bold text-xs px-3 py-1.5 rounded-bl-xl">
+                            40% выручки
+                        </div>
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-500 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-truck-fast"></i>
+                            </div>
+                            <h4 class="text-lg font-bold font-display text-white mb-2">Аварийный вызов 24/7</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Оперативный выезд аварийной бригады для ликвидации протечек, засоров и коммунальных аварий любой сложности в круглосуточном режиме.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Service 2 -->
+                    <div class="bg-bg-white border border-white/5 rounded-2xl p-6 shadow-md hover:shadow-lg hover:translate-y-[-5px] transition duration-300 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-primary text-white font-bold text-xs px-3 py-1.5 rounded-bl-xl">
+                            30% выручки
+                        </div>
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-primary flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-screwdriver-wrench"></i>
+                            </div>
+                            <h4 class="text-lg font-bold font-display text-white mb-2">Монтажные работы</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Замена и прокладка новых водопроводных, канализационных и отопительных систем, установка сложного сантехнического оборудования.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Service 3 -->
+                    <div class="bg-bg-white border border-white/5 rounded-2xl p-6 shadow-md hover:shadow-lg hover:translate-y-[-5px] transition duration-300 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-orange-600 text-white font-bold text-xs px-3 py-1.5 rounded-bl-xl">
+                            20% выручки
+                        </div>
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-orange-500/10 text-orange-500 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-business-time"></i>
+                            </div>
+                            <h4 class="text-lg font-bold font-display text-white mb-2">Абонентское обслуживание B2B</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Комплексный технический аутсорсинг для коммерческих предприятий, ТСЖ, управляющих компаний и торговых центров.
+                            </p>
+                        </div>
+                    </div>
+                    <!-- Service 4 -->
+                    <div class="bg-bg-white border border-white/5 rounded-2xl p-6 shadow-md hover:shadow-lg hover:translate-y-[-5px] transition duration-300 flex flex-col justify-between relative overflow-hidden">
+                        <div class="absolute top-0 right-0 bg-green-600 text-white font-bold text-xs px-3 py-1.5 rounded-bl-xl">
+                            10% выручки
+                        </div>
+                        <div>
+                            <div class="w-12 h-12 rounded-xl bg-green-500/10 text-green-500 flex items-center justify-center text-xl mb-4">
+                                <i class="fa-solid fa-video"></i>
+                            </div>
+                            <h4 class="text-lg font-bold font-display text-white mb-2">Видеодиагностика труб</h4>
+                            <p class="text-sm text-slate-400 leading-relaxed">
+                                Современный высокотехнологичный метод исследования внутренних полостей трубопроводов с помощью специализированных микрокамер.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 3: GOALS AND TASKS (Dark Theme) -->
+    <section id="goals" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary uppercase tracking-widest font-bold text-sm block mb-3">ОРИЕНТИРЫ ПРАКТИКИ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">ЦЕЛЬ И ЗАДАЧИ ПРАКТИКИ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Освоение профессиональных и общих компетенций в реальных условиях ведения рекламных и управленческих процессов компании.
+                </p>
+            </div>
+
+            <!-- Block 1: Goal Statement (Dark blue glowing card) -->
+            <div class="bg-bg-white border-l-4 border-primary p-8 rounded-r-2xl shadow-lg mb-12 border border-white/10 reveal">
+                <div class="flex items-start gap-4">
+                    <div class="bg-primary/10 text-primary w-12 h-12 rounded-xl flex items-center justify-center text-2xl shrink-0">
+                        <i class="fa-solid fa-bullseye"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xs uppercase font-extrabold tracking-wider text-primary mb-1">Глобальная цель практики:</h4>
+                        <p class="text-lg md:text-xl font-bold font-display text-slate-100 leading-relaxed">
+                            Закрепление теоретических знаний и приобретение практических навыков организации рекламной деятельности и управления персоналом при изготовлении рекламного продукта в ООО «Труба-Дело».
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 2: Tasks Table (Dark mode table styling) -->
+            <div class="bg-bg-white rounded-2xl border border-white/10 shadow-xl overflow-hidden reveal">
+                <div class="p-6 border-b border-white/10 bg-bg-card-alt flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+                    <h3 class="text-xl font-bold text-white font-display flex items-center gap-2">
+                        <i class="fa-solid fa-list-check text-accent"></i> Профессиональные компетенции и объем учебной нагрузки
+                    </h3>
+                    <span class="bg-primary-dark text-white text-xs font-bold px-3 py-1.5 rounded-full">Общее время: 108 часов</span>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#111C30] text-slate-300 text-xs uppercase font-bold tracking-wider border-b border-white/10">
+                                <th class="py-4 px-6 text-center w-16">№</th>
+                                <th class="py-4 px-6 w-32">Компетенция</th>
+                                <th class="py-4 px-6">Содержание задачи практики</th>
+                                <th class="py-4 px-6 text-right w-32">Часы</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10 text-slate-300 text-sm">
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 text-center font-bold text-slate-500">1</td>
+                                <td class="py-4 px-6 font-semibold text-primary">ПК 4.1</td>
+                                <td class="py-4 px-6">Планировать работу по разработке рекламного проекта в соответствии с целями и ресурсами компании</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">
+                                    <span class="text-lg text-primary mr-1">6</span>ч.
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 text-center font-bold text-slate-500">2</td>
+                                <td class="py-4 px-6 font-semibold text-primary">ПК 4.2</td>
+                                <td class="py-4 px-6">Осуществлять контроль исполнения на всех этапах разработки и выпуска рекламного продукта</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">
+                                    <span class="text-lg text-primary mr-1">12</span>ч.
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 text-center font-bold text-slate-500">3</td>
+                                <td class="py-4 px-6 font-semibold text-primary">ПК 4.3</td>
+                                <td class="py-4 px-6">Взаимодействовать с заказчиком, собирать обратную связь, формировать брифы и согласовывать концепции</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">
+                                    <span class="text-lg text-primary mr-1">24</span>ч.
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 text-center font-bold text-slate-500">4</td>
+                                <td class="py-4 px-6 font-semibold text-primary">ПК 4.4</td>
+                                <td class="py-4 px-6">Изучать и регистрировать авторское право на рекламные материалы, соблюдать ФЗ «О рекламе»</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">
+                                    <span class="text-lg text-primary mr-1">12</span>ч.
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 text-center font-bold text-slate-500">5</td>
+                                <td class="py-4 px-6 font-semibold text-primary">ПК 4.5</td>
+                                <td class="py-4 px-6">Реализовывать и анализировать технологии продвижения бренда через различные каналы (Яндекс, Google, 2ГИС)</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">
+                                    <span class="text-lg text-primary mr-1">36</span>ч.
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 text-center font-bold text-slate-500">6</td>
+                                <td class="py-4 px-6 font-semibold text-primary">ПК 4.6</td>
+                                <td class="py-4 px-6">Принимать эффективные управленческие решения в отношении рекламного бюджета и распределения ресурсов</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">
+                                    <span class="text-lg text-primary mr-1">12</span>ч.
+                                </td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 text-center font-bold text-slate-500">7</td>
+                                <td class="py-4 px-6 font-semibold text-primary">ПК 4.7</td>
+                                <td class="py-4 px-6">Обеспечивать безопасные условия труда, соблюдать технику безопасности при работе в офисе компании</td>
+                                <td class="py-4 px-6 text-right font-bold text-white">
+                                    <span class="text-lg text-primary mr-1">6</span>ч.
+                                </td>
+                            </tr>
+                            
+                            <!-- Highlighted Total (Orange glowing row) -->
+                            <tr class="bg-gradient-to-r from-accent to-accent-light text-white font-bold text-base border-t-2 border-orange-600 shadow-lg">
+                                <td class="py-5 px-6 text-center" colspan="2">ИТОГО</td>
+                                <td class="py-5 px-6 uppercase tracking-wider text-sm font-black text-white">Суммарный объем производственной практики</td>
+                                <td class="py-5 px-6 text-right">
+                                    <span class="text-2xl font-black font-display text-white">108</span> часов
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 4: ORGANIZATIONAL STRUCTURE (Dark Scheme) -->
+    <section id="structure" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">СТРУКТУРА ПРЕДПРИЯТИЯ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">ОРГАНИЗАЦИОННАЯ СТРУКТУРА</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Линейно-функциональная структура ООО «Труба-Дело» с общей численностью персонала в <strong class="text-primary-light">50 человек</strong>.
+                </p>
+            </div>
+
+            <!-- CSS Hierarchical Org Chart (Dark styled nodes and connectors) -->
+            <div class="bg-bg-white p-8 md:p-12 rounded-3xl border border-white/10 shadow-xl mb-12 overflow-x-auto reveal">
+                <div class="min-w-[900px] flex flex-col items-center">
+                    
+                    <!-- Level 1: CEO -->
+                    <div class="mb-10 text-center">
+                        <div class="tree-node bg-primary-dark text-white px-6 py-4 rounded-xl shadow-lg border-b-4 border-primary">
+                            <span class="text-xs text-blue-200 block uppercase font-black">Генеральный директор</span>
+                            <span class="font-display font-bold text-base md:text-lg">Зубарев Иван Дмитриевич</span>
+                            <span class="text-xs block mt-1 opacity-70">Руководство всей деятельностью</span>
+                        </div>
+                    </div>
+
+                    <!-- Horizontal Connector (L1 to L2) -->
+                    <div class="w-1/2 h-0.5 bg-slate-700 relative mb-8">
+                        <!-- Vertical line from L1 -->
+                        <div class="absolute top-[-40px] left-1/2 -translate-x-1/2 w-0.5 h-10 bg-slate-700"></div>
+                        <!-- Verticals to L2 nodes -->
+                        <div class="absolute top-0 left-0 w-0.5 h-8 bg-slate-700"></div>
+                        <div class="absolute top-0 right-0 w-0.5 h-8 bg-slate-700"></div>
+                    </div>
+
+                    <!-- Level 2: Deputies -->
+                    <div class="grid grid-cols-2 gap-24 w-full mb-10">
+                        <!-- Dep 1 -->
+                        <div class="flex flex-col items-center">
+                            <div class="tree-node bg-[#16253F] border border-white/10 text-white px-6 py-3 rounded-xl shadow-md border-b-4 border-primary-dark text-center w-80">
+                                <span class="text-xs text-blue-300 block uppercase font-black">Заместитель по коммерческим вопросам</span>
+                                <span class="font-display font-bold text-sm md:text-base">Коммерческая служба</span>
+                            </div>
+                            
+                            <!-- Connecting Line -->
+                            <div class="w-48 h-0.5 bg-slate-700 relative my-6">
+                                <div class="absolute top-[-24px] left-1/2 -translate-x-1/2 w-0.5 h-6 bg-slate-700"></div>
+                                <div class="absolute top-0 left-0 w-0.5 h-6 bg-slate-700"></div>
+                                <div class="absolute top-0 right-0 w-0.5 h-6 bg-slate-700"></div>
+                            </div>
+
+                            <!-- Level 3: Commercial Subdivisions -->
+                            <div class="grid grid-cols-2 gap-4 w-full max-w-[420px]">
+                                <div class="tree-node bg-bg-card-alt border border-white/5 text-slate-100 p-3 rounded-lg shadow-sm text-center">
+                                    <span class="font-display font-bold text-xs text-primary block">Диспетчерская служба</span>
+                                    <span class="text-xs text-slate-400 font-semibold">8 человек</span>
+                                </div>
+                                <div class="tree-node bg-bg-card-alt border border-white/5 text-slate-100 p-3 rounded-lg shadow-sm text-center">
+                                    <span class="font-display font-bold text-xs text-primary block">Выездные бригады</span>
+                                    <span class="text-xs text-slate-400 font-semibold">24 человека</span>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Dep 2 -->
+                        <div class="flex flex-col items-center">
+                            <div class="tree-node bg-[#16253F] border border-white/10 text-white px-6 py-3 rounded-xl shadow-md border-b-4 border-primary-dark text-center w-80">
+                                <span class="text-xs text-blue-300 block uppercase font-black">Заместитель по техническим вопросам</span>
+                                <span class="font-display font-bold text-sm md:text-base">Производственно-техническая служба</span>
+                            </div>
+
+                            <!-- Connecting Line -->
+                            <div class="w-48 h-0.5 bg-slate-700 relative my-6">
+                                <div class="absolute top-[-24px] left-1/2 -translate-x-1/2 w-0.5 h-6 bg-slate-700"></div>
+                                <div class="absolute top-0 left-0 w-0.5 h-6 bg-slate-700"></div>
+                                <div class="absolute top-0 right-0 w-0.5 h-6 bg-slate-700"></div>
+                            </div>
+
+                            <!-- Level 3: Technical Subdivisions -->
+                            <div class="grid grid-cols-2 gap-4 w-full max-w-[420px]">
+                                <div class="tree-node bg-bg-card-alt border border-white/5 text-slate-100 p-3 rounded-lg shadow-sm text-center">
+                                    <span class="font-display font-bold text-xs text-primary block">Служба диагностики</span>
+                                    <span class="text-xs text-slate-400 font-semibold">6 человек</span>
+                                </div>
+                                
+                                <!-- Highlighted Marketing Dept -->
+                                <div class="tree-node bg-gradient-to-br from-accent to-accent-light text-white p-3 rounded-lg shadow-lg text-center border-b-4 border-orange-600 animate-pulse">
+                                    <span class="font-display font-black text-xs block">ОТДЕЛ МАРКЕТИНГА</span>
+                                    <span class="text-xs font-bold bg-white/20 px-2 py-0.5 rounded-full inline-block mt-1">4 человека ★</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Connectors from Marketing Department down to Auxiliary Departments -->
+                    <div class="w-[450px] h-0.5 bg-slate-700 relative mb-6">
+                        <!-- Line down from Marketing block -->
+                        <div class="absolute top-[-40px] right-[100px] w-0.5 h-10 bg-slate-700"></div>
+                        <!-- Verticals down to L4 nodes -->
+                        <div class="absolute top-0 left-0 w-0.5 h-6 bg-slate-700"></div>
+                        <div class="absolute top-0 left-1/2 -translate-x-1/2 w-0.5 h-6 bg-slate-700"></div>
+                        <div class="absolute top-0 right-0 w-0.5 h-6 bg-slate-700"></div>
+                    </div>
+
+                    <!-- Level 4: Auxiliary Units -->
+                    <div class="grid grid-cols-3 gap-4 w-full max-w-[650px]">
+                        <div class="tree-node bg-bg-card-alt border border-white/5 text-slate-100 p-3 rounded-lg shadow-sm text-center">
+                            <span class="font-display font-bold text-xs text-slate-300 block">Бухгалтерия</span>
+                            <span class="text-xs text-slate-400 font-semibold">3 человека</span>
+                        </div>
+                        <div class="tree-node bg-bg-card-alt border border-white/5 text-slate-100 p-3 rounded-lg shadow-sm text-center">
+                            <span class="font-display font-bold text-xs text-slate-300 block">Служба кадров</span>
+                            <span class="text-xs text-slate-400 font-semibold">2 человека</span>
+                        </div>
+                        <div class="tree-node bg-bg-card-alt border border-white/5 text-slate-100 p-3 rounded-lg shadow-sm text-center">
+                            <span class="font-display font-bold text-xs text-slate-300 block">Служба склада</span>
+                            <span class="text-xs text-slate-400 font-semibold">3 человека</span>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- Block 3: Highlighted Marketing Department Details (Glowing design) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch reveal">
+                <!-- Info Section -->
+                <div class="lg:col-span-1 bg-gradient-to-br from-accent to-orange-600 text-white p-8 rounded-2xl shadow-xl flex flex-col justify-between border border-white/10">
+                    <div>
+                        <span class="text-orange-100 uppercase tracking-widest font-extrabold text-xs block mb-2">Наш отдел практики</span>
+                        <h3 class="text-2xl md:text-3xl font-black font-display mb-4">ОТДЕЛ МАРКЕТИНГА</h3>
+                        <p class="text-sm opacity-90 leading-relaxed mb-6">
+                            Стратегическое звено, отвечающее за позиционирование ООО «Труба-Дело», стабильный поток входящих заявок (лидов) и удержание высоких позиций бренда в регионе.
+                        </p>
+                    </div>
+                    <div class="bg-white/10 p-4 rounded-xl border border-white/10">
+                        <span class="text-xs block text-orange-200 uppercase font-bold mb-1">Ключевая цель отдела</span>
+                        <p class="text-sm font-semibold text-white">Максимизация ROI рекламных вложений и расширение рыночной доли в Екатеринбурге.</p>
+                    </div>
+                </div>
+
+                <!-- Team Section -->
+                <div class="bg-bg-white p-8 rounded-2xl border border-white/10 shadow-xl">
+                    <h4 class="text-lg font-bold font-display text-white mb-6 flex items-center gap-2">
+                        <i class="fa-solid fa-people-group text-accent"></i> Структура штата отдела
+                    </h4>
+                    <ul class="space-y-4">
+                        <li class="flex items-center gap-4 bg-bg-card-alt p-3.5 rounded-xl border border-white/5 shadow-sm">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 text-primary-light flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                            <div>
+                                <h5 class="font-display font-bold text-sm text-white">Начальник отдела маркетинга</h5>
+                                <span class="text-xs text-slate-400">Управление бюджетом, планирование кампаний</span>
+                            </div>
+                        </li>
+                        <li class="flex items-center gap-4 bg-bg-card-alt p-3.5 rounded-xl border border-white/5 shadow-sm">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 text-primary-light flex items-center justify-center font-bold text-sm shrink-0">2</div>
+                            <div>
+                                <h5 class="font-display font-bold text-sm text-white">Специалисты по рекламе (2)</h5>
+                                <span class="text-xs text-slate-400">Запуск Яндекс.Директ, аналитика и карты</span>
+                            </div>
+                        </li>
+                        <li class="flex items-center gap-4 bg-bg-card-alt p-3.5 rounded-xl border border-white/5 shadow-sm">
+                            <div class="w-10 h-10 rounded-full bg-primary/20 text-primary-light flex items-center justify-center font-bold text-sm shrink-0">1</div>
+                            <div>
+                                <h5 class="font-display font-bold text-sm text-white">SMM-менеджер</h5>
+                                <span class="text-xs text-slate-400">Социальные сети, отзывы, PR-материалы</span>
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- Functions Section -->
+                <div class="bg-bg-white p-8 rounded-2xl border border-white/10 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h4 class="text-lg font-bold font-display text-white mb-6 flex items-center gap-2">
+                            <i class="fa-solid fa-list-check text-accent"></i> Ключевые функции отдела
+                        </h4>
+                        <ul class="space-y-3 text-sm text-slate-300">
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-accent text-base mt-0.5"><i class="fa-solid fa-circle-chevron-right"></i></span>
+                                <span>Разработка и реализация общей маркетинговой стратегии;</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-accent text-base mt-0.5"><i class="fa-solid fa-circle-chevron-right"></i></span>
+                                <span>Управление рекламными кампаниями и бюджетом (Яндекс, 2ГИС);</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-accent text-base mt-0.5"><i class="fa-solid fa-circle-chevron-right"></i></span>
+                                <span>Ведение корпоративных аккаунтов в социальных сетях (SMM);</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-accent text-base mt-0.5"><i class="fa-solid fa-circle-chevron-right"></i></span>
+                                <span>Работа с имиджем, отзывами клиентов и PR;</span>
+                            </li>
+                            <li class="flex items-start gap-2.5">
+                                <span class="text-accent text-base mt-0.5"><i class="fa-solid fa-circle-chevron-right"></i></span>
+                                <span>Анализ эффективности каналов и вычисление CAC/LTV/ROI.</span>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 5: PERFORMANCE INDICATORS (Dark Theme) -->
+    <section id="indicators" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-light uppercase tracking-widest font-bold text-sm block mb-3">ДИНАМИКА РАЗВИТИЯ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">ПОКАЗАТЕЛИ ДЕЯТЕЛЬНОСТИ 2024-2025</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Сравнительный анализ ключевых финансово-экономических результатов компании за последние два года.
+                </p>
+            </div>
+
+            <!-- Financial Table (Dark layout) -->
+            <div class="bg-bg-white rounded-3xl border border-white/10 shadow-xl overflow-hidden mb-16 reveal">
+                <div class="p-6 border-b border-white/10 bg-bg-card-alt flex items-center justify-between">
+                    <h3 class="text-lg font-bold text-white font-display flex items-center gap-2">
+                        <i class="fa-solid fa-money-bill-trend-up text-accent"></i> Сводная таблица финансовых показателей
+                    </h3>
+                    <span class="text-xs font-bold text-slate-400">Данные в млн рублей</span>
+                </div>
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#111C30] text-slate-300 text-xs uppercase font-bold tracking-wider border-b border-white/10">
+                                <th class="py-4 px-8">Показатель</th>
+                                <th class="py-4 px-8 text-center">2024 г.</th>
+                                <th class="py-4 px-8 text-center">2025 г.</th>
+                                <th class="py-4 px-8 text-right">Темп роста (%) / Прирост</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10 text-slate-300 font-medium">
+                            <!-- Revenue Row -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-5 px-8 font-bold text-white">Выручка компании (нетто)</td>
+                                <td class="py-5 px-8 text-center">50,6 млн ₽</td>
+                                <td class="py-5 px-8 text-center font-bold text-white">58,2 млн ₽</td>
+                                <td class="py-5 px-8 text-right text-success font-black text-base">
+                                    +15,0% <i class="fa-solid fa-caret-up"></i>
+                                </td>
+                            </tr>
+                            <!-- Cost Row -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-5 px-8 text-slate-400">Себестоимость продаж</td>
+                                <td class="py-5 px-8 text-center">38,4 млн ₽</td>
+                                <td class="py-5 px-8 text-center">43,1 млн ₽</td>
+                                <td class="py-5 px-8 text-right text-slate-400">
+                                    +12,2%
+                                </td>
+                            </tr>
+                            <!-- Gross Profit Row -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-5 px-8 font-bold text-white">Валовая прибыль</td>
+                                <td class="py-5 px-8 text-center">12,2 млн ₽</td>
+                                <td class="py-5 px-8 text-center font-bold text-white">15,1 млн ₽</td>
+                                <td class="py-5 px-8 text-right text-success font-black text-base">
+                                    +23,8% <i class="fa-solid fa-caret-up"></i>
+                                </td>
+                            </tr>
+                            <!-- Net Profit Row -->
+                            <tr class="hover:bg-white/5 transition bg-green-500/5">
+                                <td class="py-5 px-8 font-bold text-primary-light">Чистая прибыль (после налогов)</td>
+                                <td class="py-5 px-8 text-center text-slate-300">7,8 млн ₽</td>
+                                <td class="py-5 px-8 text-center font-bold text-primary-light">9,6 млн ₽</td>
+                                <td class="py-5 px-8 text-right text-success font-black text-base">
+                                    +23,1% <i class="fa-solid fa-caret-up"></i>
+                                end
+                            </tr>
+                            <!-- Profitability Row -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-5 px-8 text-slate-400">Рентабельность продаж (ROS)</td>
+                                <td class="py-5 px-8 text-center">15,4%</td>
+                                <td class="py-5 px-8 text-center">16,5%</td>
+                                <td class="py-5 px-8 text-right text-success font-black">
+                                    +1,1 п.п. <i class="fa-solid fa-caret-up"></i>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Block 2: Production Indicators (Dark Styled Cards) -->
+            <div class="mb-16 reveal">
+                <h3 class="text-2xl font-black text-white font-display mb-8 text-center">Производственные показатели компании</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Indicator 1 -->
+                    <div class="bg-bg-white border border-white/10 p-8 rounded-2xl shadow-lg text-center hover:translate-y-[-5px] transition duration-300">
+                        <div class="w-14 h-14 bg-primary/20 text-primary-light text-2xl rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-helmet-safety"></i>
+                        </div>
+                        <span class="text-xs text-slate-400 block uppercase font-bold mb-1">Выполнено работ</span>
+                        <div class="text-3xl font-black font-display text-white mb-2">
+                            <span class="counter" data-target="54200">0</span> → <span class="counter" data-target="62800">0</span>
+                        </div>
+                        <span class="text-sm bg-green-500/10 text-green-400 font-bold px-3 py-1 rounded-full inline-block">
+                            +15,9% прирост
+                        </span>
+                    </div>
+                    <!-- Indicator 2 -->
+                    <div class="bg-bg-white border border-white/10 p-8 rounded-2xl shadow-lg text-center hover:translate-y-[-5px] transition duration-300">
+                        <div class="w-14 h-14 bg-accent/20 text-accent text-2xl rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-users-viewfinder"></i>
+                        </div>
+                        <span class="text-xs text-slate-400 block uppercase font-bold mb-1">Постоянных клиентов</span>
+                        <div class="text-3xl font-black font-display text-white mb-2">
+                            <span class="counter" data-target="48500">0</span> → <span class="counter" data-target="53200">0</span>
+                        </div>
+                        <span class="text-sm bg-green-500/10 text-green-400 font-bold px-3 py-1 rounded-full inline-block">
+                            +9,7% прирост
+                        </span>
+                    </div>
+                    <!-- Indicator 3 -->
+                    <div class="bg-bg-white border border-white/10 p-8 rounded-2xl shadow-lg text-center hover:translate-y-[-5px] transition duration-300">
+                        <div class="w-14 h-14 bg-green-500/20 text-green-400 text-2xl rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa-solid fa-user-plus"></i>
+                        </div>
+                        <span class="text-xs text-slate-400 block uppercase font-bold mb-1">Новых клиентов</span>
+                        <div class="text-3xl font-black font-display text-white mb-2">
+                            <span class="counter" data-target="12300">0</span> → <span class="counter" data-target="14600">0</span>
+                        </div>
+                        <span class="text-sm bg-green-500/10 text-green-400 font-bold px-3 py-1 rounded-full inline-block">
+                            +18,7% прирост
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 3: Staff Efficiency Indicators -->
+            <div class="reveal">
+                <h3 class="text-2xl font-black text-white font-display mb-8 text-center">Эффективность использования персонала</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Efficiency Card 1 -->
+                    <div class="bg-bg-card-alt text-white p-8 rounded-2xl shadow-lg relative overflow-hidden group hover:translate-y-[-5px] transition border border-white/5">
+                        <div class="absolute -right-8 -bottom-8 text-white/5 text-9xl group-hover:scale-110 transition duration-500">
+                            <i class="fa-solid fa-sack-dollar"></i>
+                        </div>
+                        <span class="text-xs text-blue-300 block uppercase font-black mb-2">Выручка на сотрудника</span>
+                        <div class="text-4xl font-black font-display mb-3 text-primary-light">
+                            <span class="counter" data-target="1012">0</span> → <span class="counter" data-target="1164">0</span> тыс. ₽
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Отражает устойчивый рост производительности труда и эффективности рекламных коммуникаций на 15,0%.
+                        </p>
+                    </div>
+                    <!-- Efficiency Card 2 -->
+                    <div class="bg-bg-card-alt text-white p-8 rounded-2xl shadow-lg relative overflow-hidden group hover:translate-y-[-5px] transition border border-white/5">
+                        <div class="absolute -right-8 -bottom-8 text-white/5 text-9xl group-hover:scale-110 transition duration-500">
+                            <i class="fa-solid fa-gauge-high"></i>
+                        </div>
+                        <span class="text-xs text-blue-300 block uppercase font-black mb-2">Выработка на сотрудника</span>
+                        <div class="text-4xl font-black font-display mb-3 text-primary-light">
+                            <span class="counter" data-target="780">0</span> → <span class="counter" data-target="912">0</span> тыс. ₽
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Улучшение выработки за счет оптимизации выездных логистических цепочек и внедрения CRM-системы.
+                        </p>
+                    </div>
+                    <!-- Efficiency Card 3 -->
+                    <div class="bg-bg-card-alt text-white p-8 rounded-2xl shadow-lg relative overflow-hidden group hover:translate-y-[-5px] transition border border-white/5">
+                        <div class="absolute -right-8 -bottom-8 text-white/5 text-9xl group-hover:scale-110 transition duration-500">
+                            <i class="fa-solid fa-wallet"></i>
+                        </div>
+                        <span class="text-xs text-blue-300 block uppercase font-black mb-2">Средняя зарплата персонала</span>
+                        <div class="text-4xl font-black font-display mb-3 text-primary-light">
+                            <span class="counter" data-target="52000">0</span> → <span class="counter" data-target="56800">0</span> ₽
+                        </div>
+                        <p class="text-sm text-slate-300 leading-relaxed">
+                            Рост зарплат на 9,2% опережает инфляцию, снижает текучесть кадров и способствует росту лояльности специалистов.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 6: ADVERTISING ACTIVITY (Dark Theme) -->
+    <section id="marketing" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">АНАЛИТИКА ПРОДВИЖЕНИЯ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">ОРГАНИЗАЦИЯ РЕКЛАМНОЙ ДЕЯТЕЛЬНОСТИ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Бюджетирование и распределение рекламных инвестиций компании по каналам продвижения за 2025 год.
+                </p>
+            </div>
+
+            <!-- Key Figures Center Block -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-16 reveal">
+                <div class="bg-gradient-to-br from-[#1E5A8E] to-primary text-white p-8 rounded-2xl shadow-lg text-center border border-white/10">
+                    <span class="text-xs text-blue-100 uppercase font-bold tracking-wider block mb-1">Годовой рекламный бюджет 2025</span>
+                    <h3 class="text-4xl md:text-5xl font-black font-display tracking-tight text-white mb-2">3,2 млн ₽</h3>
+                    <p class="text-xs text-blue-200">Инвестировано в генерацию лидов и продвижение</p>
+                </div>
+                <div class="bg-gradient-to-br from-accent to-accent-light text-white p-8 rounded-2xl shadow-lg text-center border border-white/10">
+                    <span class="text-xs text-orange-100 uppercase font-bold tracking-wider block mb-1">Доля рекламного бюджета в обороте</span>
+                    <h3 class="text-4xl md:text-5xl font-black font-display tracking-tight text-white mb-2">5,5%</h3>
+                    <p class="text-xs text-orange-700 bg-white/95 font-bold px-3 py-1 rounded-full inline-block mt-1">Оптимальный уровень для сферы услуг</p>
+                </div>
+            </div>
+
+            <!-- Chart Block with Clickable Interactive Legend -->
+            <div class="bg-bg-white p-8 md:p-12 rounded-3xl border border-white/10 shadow-xl reveal">
+                <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+                    
+                    <!-- Left Side: Pie Chart -->
+                    <div class="lg:col-span-5 flex items-center justify-center">
+                        <div class="w-full max-w-[340px] aspect-square relative">
+                            <canvas id="marketingBudgetChart"></canvas>
+                        </div>
+                    </div>
+
+                    <!-- Right Side: Interactivity & Legend -->
+                    <div class="lg:col-span-7">
+                        <h4 class="text-xl font-bold font-display text-white mb-2">Структура рекламного бюджета</h4>
+                        <p class="text-sm text-slate-400 mb-6">Нажмите на любой канал ниже, чтобы сфокусировать внимание на его деталях и объемах инвестиций в рублях.</p>
+                        
+                        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4" id="customLegendContainer">
+                            <!-- JS will generate elements here dynamically to keep synchronized and interactive -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 7: SWOT ANALYSIS (Dark interactive blocks) -->
+    <section id="swot" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-light uppercase tracking-widest font-bold text-sm block mb-3">СТРАТЕГИЧЕСКИЙ АНАЛИЗ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">SWOT-АНАЛИЗ ПРЕДПРИЯТИЯ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Комплексная оценка внутренних сильных и слабых сторон, а также внешних возможностей и угроз компании. 
+                    <span class="block font-bold text-accent mt-2 text-sm"><i class="fa-solid fa-circle-info"></i> Нажмите на любой сектор, чтобы увидеть развернутую информацию.</span>
+                </p>
+            </div>
+
+            <!-- Interactive 2x2 SWOT Matrix with dark responsive styling -->
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 reveal">
+                
+                <!-- Strengths (S) -->
+                <div class="bg-green-950/20 border border-green-900/50 rounded-3xl p-8 hover:shadow-lg hover:translate-y-[-5px] transition duration-300 cursor-pointer group" onclick="toggleSwotDetails('strengths')">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl md:text-2xl font-black font-display text-green-300 flex items-center gap-3">
+                            <span class="bg-green-600 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold">S</span>
+                            СИЛЬНЫЕ СТОРОНЫ
+                        </h3>
+                        <i class="fa-solid fa-chevron-down text-green-400 transition duration-300 group-hover:scale-125" id="strengths-arrow"></i>
+                    </div>
+                    <ul class="space-y-2 text-green-100/90 text-sm">
+                        <li><i class="fa-solid fa-circle-check text-green-500 mr-2"></i> 20 лет успешного опыта на рынке Екатеринбурга</li>
+                        <li><i class="fa-solid fa-circle-check text-green-500 mr-2"></i> Идеальный рейтинг 4.8/5 в независимых отзывах</li>
+                        <li><i class="fa-solid fa-circle-check text-green-500 mr-2"></i> Круглосуточный режим аварийной службы 24/7</li>
+                    </ul>
+                    <!-- Extra Details shown on click -->
+                    <div class="mt-6 pt-4 border-t border-green-900/30 hidden text-xs md:text-sm text-green-200/90 leading-relaxed" id="strengths-details">
+                        <strong class="block mb-2 text-green-300">Детализация преимуществ:</strong>
+                        <p class="mb-2">Более 100,000 постоянных клиентов формируют сильное сарафанное радио, снижая зависимость от платных рекламных каналов. Наличие собственного специализированного автопарка из 15 автомобилей гарантирует выезд в течение 30 минут в любую точку города.</p>
+                        <p>Высококвалифицированный штат специалистов с регулярной аттестацией позволяет решать сложнейшие задачи B2B сектора.</p>
+                    </div>
+                </div>
+
+                <!-- Weaknesses (W) -->
+                <div class="bg-yellow-950/20 border border-yellow-900/50 rounded-3xl p-8 hover:shadow-lg hover:translate-y-[-5px] transition duration-300 cursor-pointer group" onclick="toggleSwotDetails('weaknesses')">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl md:text-2xl font-black font-display text-yellow-300 flex items-center gap-3">
+                            <span class="bg-yellow-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold">W</span>
+                            СЛАБЫЕ СТОРОНЫ
+                        </h3>
+                        <i class="fa-solid fa-chevron-down text-yellow-400 transition duration-300 group-hover:scale-125" id="weaknesses-arrow"></i>
+                    </div>
+                    <ul class="space-y-2 text-yellow-100/90 text-sm">
+                        <li><i class="fa-solid fa-circle-xmark text-yellow-500 mr-2"></i> Ограниченность бюджета по отношению к крупным сетям</li>
+                        <li><i class="fa-solid fa-circle-xmark text-yellow-500 mr-2"></i> Высокая текучесть линейных специалистов (15-20%)</li>
+                        <li><i class="fa-solid fa-circle-xmark text-yellow-500 mr-2"></i> Слабое продвижение в социальных медиа (SMM)</li>
+                    </ul>
+                    <!-- Extra Details shown on click -->
+                    <div class="mt-6 pt-4 border-t border-yellow-900/30 hidden text-xs md:text-sm text-yellow-200/90 leading-relaxed" id="weaknesses-details">
+                        <strong class="block mb-2 text-yellow-300">Детализация узких мест:</strong>
+                        <p class="mb-2">Выраженная сезонность спроса: пиковые нагрузки приходятся на опрессовки и начало отопительного сезона (сентябрь-октябрь), в то время как январь-февраль характеризуются сильным падением заказов.</p>
+                        <p>Устаревшая система распределения входящих лидов вручную через диспетчеров увеличивает скорость реакции на онлайн-заявки до 15-20 минут.</p>
+                    </div>
+                </div>
+
+                <!-- Opportunities (O) -->
+                <div class="bg-blue-950/20 border border-blue-900/50 rounded-3xl p-8 hover:shadow-lg hover:translate-y-[-5px] transition duration-300 cursor-pointer group" onclick="toggleSwotDetails('opportunities')">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl md:text-2xl font-black font-display text-blue-300 flex items-center gap-3">
+                            <span class="bg-blue-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold">O</span>
+                            ВОЗМОЖНОСТИ
+                        </h3>
+                        <i class="fa-solid fa-chevron-down text-blue-400 transition duration-300 group-hover:scale-125" id="opportunities-arrow"></i>
+                    </div>
+                    <ul class="space-y-2 text-blue-100/90 text-sm">
+                        <li><i class="fa-solid fa-rocket text-blue-400 mr-2"></i> Географическая экспансия (Первоуральск, Н. Тагил)</li>
+                        <li><i class="fa-solid fa-rocket text-blue-400 mr-2"></i> Полноценное внедрение сквозной CRM-аналитики</li>
+                        <li><i class="fa-solid fa-rocket text-blue-400 mr-2"></i> Разработка и предложение комплексных B2B пакетов</li>
+                    </ul>
+                    <!-- Extra Details shown on click -->
+                    <div class="mt-6 pt-4 border-t border-blue-900/30 hidden text-xs md:text-sm text-blue-200/90 leading-relaxed" id="opportunities-details">
+                        <strong class="block mb-2 text-blue-300">Перспективные векторы развития:</strong>
+                        <p class="mb-2">Внедрение сквозной CRM (напр. amoCRM / Bitrix24) позволит автоматически рассчитывать стоимость привлечения лида (CAC) и пожизненную ценность клиента (LTV) в режиме реального времени, что сбережет до 20% бюджета.</p>
+                        <p>Активное внедрение услуг превентивной телеинспекции трубопроводов способно повысить чек корпоративных клиентов на 40%.</p>
+                    </div>
+                </div>
+
+                <!-- Threats (T) -->
+                <div class="bg-red-950/20 border border-red-900/50 rounded-3xl p-8 hover:shadow-lg hover:translate-y-[-5px] transition duration-300 cursor-pointer group" onclick="toggleSwotDetails('threats')">
+                    <div class="flex items-center justify-between mb-4">
+                        <h3 class="text-xl md:text-2xl font-black font-display text-red-300 flex items-center gap-3">
+                            <span class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold">T</span>
+                            УГРОЗЫ
+                        </h3>
+                        <i class="fa-solid fa-chevron-down text-red-400 transition duration-300 group-hover:scale-125" id="threats-arrow"></i>
+                    </div>
+                    <ul class="space-y-2 text-red-100/90 text-sm">
+                        <li><i class="fa-solid fa-triangle-exclamation text-red-400 mr-2"></i> Появление крупных агрегаторов услуг (Профи.ру, Яндекс)</li>
+                        <li><i class="fa-solid fa-triangle-exclamation text-red-400 mr-2"></i> Ценовой демпинг со стороны «серых» частных бригад</li>
+                        <li><i class="fa-solid fa-triangle-exclamation text-red-400 mr-2"></i> Сильный дефицит профессиональных сантехников на рынке</li>
+                    </ul>
+                    <!-- Extra Details shown on click -->
+                    <div class="mt-6 pt-4 border-t border-red-900/30 hidden text-xs md:text-sm text-red-200/90 leading-relaxed" id="threats-details">
+                        <strong class="block mb-2 text-red-300">Оценка внешних угроз:</strong>
+                        <p class="mb-2">Крупные онлайн-платформа и агрегаторы стремятся монополизировать поисковую выдачу, увеличивая стоимость клика в контекстной рекламе. Рост расходов на импортные комплектующие и заграничные сантехнические детали (до 30%) давит на общую маржинальность услуг.</p>
+                        <p>Для нивелирования дефицита кадров требуется разработка внутренней программы обучения и наставничества молодых специалистов.</p>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 8: PEST ANALYSIS (Dark Theme) -->
+    <section id="pest" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">СТРАТЕГИЧЕСКИЙ АНАЛИЗ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">PEST-АНАЛИЗ ФАКТОРОВ ВНЕШНЕЙ СРЕДЫ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Оценка политических, экономических, социальных и технологических макрофакторов, влияющих на ООО «Труба-Дело».
+                </p>
+            </div>
+
+            <!-- PEST Grid with beautiful card borders -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 reveal">
+                
+                <!-- P: Political -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-8 shadow-xl">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-primary flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-landmark"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-white uppercase">🏛️ Political (Политические)</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm text-slate-300">
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-green-500/20 text-green-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">✅ Пол.</span>
+                            <div>
+                                <strong class="text-white block">Государственная поддержка малого и среднего бизнеса</strong>
+                                Льготное кредитование и налоговые преференции снижают общую финансовую нагрузку на компанию.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-yellow-500/20 text-yellow-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">⚠️ Нейтр.</span>
+                            <div>
+                                <strong class="text-white block">Лицензирование строительной и сантехнической деятельности</strong>
+                                Ужесточение СРО стандартов отсеивает несерьезных конкурентов, но требует бумажной рутины.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-red-500/20 text-red-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">❌ Отр.</span>
+                            <div>
+                                <strong class="text-white block">Регулирование трудового законодательства</strong>
+                                Повышение МРОТ и налогов на фонд оплаты труда увеличивает внутренние издержки компании.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- E: Economical -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-8 shadow-xl">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-orange-500/10 text-accent flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-chart-line"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-white uppercase">💰 Economical (Экономические)</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm text-slate-300">
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-red-500/20 text-red-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">❌ Отр.</span>
+                            <div>
+                                <strong class="text-white block">Инфляционные процессы в экономике</strong>
+                                Рост цен на инструменты, спецавтотранспорт и расходные сантехнические материалы зарубежного производства.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-green-500/20 text-green-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">✅ Пол.</span>
+                            <div>
+                                <strong class="text-white block">Стабильный платежеспособный спрос</strong>
+                                Екатеринбург является крупным мегаполисом со стабильно высоким уровнем доходов населения в сравнении с малым регионом.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-red-500/20 text-red-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">❌ Отр.</span>
+                            <div>
+                                <strong class="text-white block">Повышение процентных ставок по кредитам</strong>
+                                Высокая ключевая ставка удорожает коммерческое финансирование покупки нового оборудования.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- S: Social -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-8 shadow-xl">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/10 text-green-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-people-roof"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-white uppercase">👥 Social (Социальные)</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm text-slate-300">
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-green-500/20 text-green-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">✅ Пол.</span>
+                            <div>
+                                <strong class="text-white block">Постепенное старение жилого фонда города</strong>
+                                Высокий процент износа внутренних водопроводов в домах советской постройки стимулирует непрерывный спрос на сантехнические услуги.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-green-500/20 text-green-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">✅ Пол.</span>
+                            <div>
+                                <strong class="text-white block">Темпы урбанизации и ввода жилья</strong>
+                                Активное строительство новых жилых комплексов открывает возможности заключения договоров на монтаж с девелоперами.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-red-500/20 text-red-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">❌ Отр.</span>
+                            <div>
+                                <strong class="text-white block">Острый дефицит кадров рабочих специальностей</strong>
+                                Снижение престижности профессии сантехника ведет к дефициту квалифицированных монтажников.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+                <!-- T: Technological -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-8 shadow-xl">
+                    <div class="flex items-center gap-4 mb-6">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-2xl">
+                            <i class="fa-solid fa-laptop-code"></i>
+                        </div>
+                        <h3 class="text-xl font-bold font-display text-white uppercase">💻 Technological (Технологические)</h3>
+                    </div>
+                    <ul class="space-y-4 text-sm text-slate-300">
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-green-500/20 text-green-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">✅ Пол.</span>
+                            <div>
+                                <strong class="text-white block">Глубокая цифровая трансформация процессов</strong>
+                                Внедрение мобильного приложения для сантехников оптимизирует распределение заказов и отчетность перед диспетчером.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-green-500/20 text-green-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">✅ Пол.</span>
+                            <div>
+                                <strong class="text-white block">Развитие методов бесконтактной диагностики</strong>
+                                Внедрение ультразвуковой и видеотелеметрии позволяет диагностировать скрытые дефекты труб без демонтажа стен.
+                            </div>
+                        </li>
+                        <li class="flex items-start gap-3 bg-bg-card-alt p-3.5 rounded-xl border border-white/5">
+                            <span class="bg-green-500/20 text-green-400 font-extrabold text-xs px-2.5 py-1 rounded-full shrink-0">✅ Пол.</span>
+                            <div>
+                                <strong class="text-white block">Инструменты интернет-маркетинга</strong>
+                                Появление интеллектуальных систем контекстной рекламы на базе ИИ увеличивает точность попадания в целевую аудиторию.
+                            </div>
+                        </li>
+                    </ul>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 9: STRUCTURE OF SALES (Dark) -->
+    <section id="sales" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary uppercase tracking-widest font-bold text-sm block mb-3">СТРУКТУРА ПРОДАЖ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">СТРУКТУРА ОБЪЕМА ПРОДАЖ (2025)</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Детальная инфографика коммерческих показателей по видам услуг, клиентским сегментам и эффективности привлечения.
+                </p>
+            </div>
+
+            <!-- Three blocks in a row with dark cards -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch reveal">
+                
+                <!-- Block 1: By Service Type -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-6 flex flex-col justify-between shadow-xl">
+                    <div>
+                        <h3 class="text-lg font-bold font-display text-white mb-4 pb-2 border-b border-white/5">
+                            <i class="fa-solid fa-chart-bar text-primary"></i> 1. По видам услуг
+                        </h3>
+                        <p class="text-xs text-slate-400 mb-4">Распределение суммарной выручки 58,2 млн ₽</p>
+                        
+                        <div class="space-y-4">
+                            <!-- Progress 1 -->
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-300">🚨 Аварийный вызов</span>
+                                    <span class="text-primary-light">40% (23,28 млн ₽)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-red-500 h-full rounded-full" style="width: 40%"></div>
+                                </div>
+                            </div>
+                            <!-- Progress 2 -->
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-300">🔧 Монтажные работы</span>
+                                    <span class="text-primary-light">30% (17,46 млн ₽)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 30%"></div>
+                                </div>
+                            </div>
+                            <!-- Progress 3 -->
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-300">📋 Абонентское B2B</span>
+                                    <span class="text-primary-light">20% (11,64 млн ₽)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-orange-500 h-full rounded-full" style="width: 20%"></div>
+                                </div>
+                            </div>
+                            <!-- Progress 4 -->
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-300">🔍 Видеодиагностика</span>
+                                    <span class="text-primary-light">10% (5,82 млн ₽)</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2.5 rounded-full overflow-hidden">
+                                    <div class="bg-green-600 h-full rounded-full" style="width: 10%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-bg-card-alt p-3 rounded-lg text-xs text-slate-400 border border-white/5">
+                        * Аварийный вызов — ядро выручки, обеспечивающее стабильный кэшфлоу.
+                    </div>
+                </div>
+
+                <!-- Block 2: By Client Segment -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-6 flex flex-col justify-between shadow-xl">
+                    <div>
+                        <h3 class="text-lg font-bold font-display text-white mb-4 pb-2 border-b border-white/5">
+                            <i class="fa-solid fa-chart-pie text-accent"></i> 2. По сегментам клиентов
+                        </h3>
+                        <p class="text-xs text-slate-400 mb-4">Вклад сегментов и средний чек сделки</p>
+                        
+                        <!-- Pie chart inside -->
+                        <div class="h-44 flex items-center justify-center mb-4">
+                            <canvas id="clientSegmentChart"></canvas>
+                        </div>
+                    </div>
+
+                    <div class="space-y-2 text-xs">
+                        <div class="flex justify-between border-t border-white/5 pt-2 text-slate-300">
+                            <span>👤 B2C (Физические лица):</span>
+                            <span class="font-bold text-white">70% (Ср. чек: 850 ₽)</span>
+                        </div>
+                        <div class="flex justify-between text-slate-300">
+                            <span>🏢 B2B (ТСЖ / УК):</span>
+                            <span class="font-bold text-white">20% (Ср. чек: 15 200 ₽)</span>
+                        </div>
+                        <div class="flex justify-between text-slate-300">
+                            <span>🏭 Коммерческие орг.:</span>
+                            <span class="font-bold text-white">10% (Ср. чек: 28 500 ₽)</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Block 3: By Channels (with CAC) -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-6 flex flex-col justify-between shadow-xl">
+                    <div>
+                        <h3 class="text-lg font-bold font-display text-white mb-4 pb-2 border-b border-white/5">
+                            <i class="fa-solid fa-filter text-green-500"></i> 3. По каналам привлечения
+                        </h3>
+                        <p class="text-xs text-slate-400 mb-4">Доля канала и стоимость привлечения клиента (CAC)</p>
+                        
+                        <div class="space-y-3">
+                            <!-- Channel 1 -->
+                            <div class="bg-bg-card-alt p-2.5 rounded-lg border border-white/5 flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-200 block">🗺️ 2ГИС и Яндекс.Карты</span>
+                                    <span class="text-[10px] text-slate-400">Стоимость клиента CAC: <strong class="text-slate-300 font-semibold">180 ₽</strong></span>
+                                </div>
+                                <span class="text-xs font-bold text-white bg-white/5 border border-white/10 px-2 py-0.5 rounded">35%</span>
+                            </div>
+                            <!-- Channel 2 -->
+                            <div class="bg-orange-950/20 p-2.5 rounded-lg border border-orange-900/40 flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-orange-200 block flex items-center gap-1">👥 Рекомендации (Сарафан) <span class="text-orange-500">⭐</span></span>
+                                    <span class="text-[10px] text-orange-300 font-bold">Стоимость клиента CAC: 0 ₽</span>
+                                </div>
+                                <span class="text-xs font-black text-orange-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">25%</span>
+                            </div>
+                            <!-- Channel 3 -->
+                            <div class="bg-bg-card-alt p-2.5 rounded-lg border border-white/5 flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-200 block">📱 Контекстная реклама</span>
+                                    <span class="text-[10px] text-slate-400">Стоимость клиента CAC: <strong class="text-slate-300 font-semibold">450 ₽</strong></span>
+                                </div>
+                                <span class="text-xs font-bold text-white bg-white/5 border border-white/10 px-2 py-0.5 rounded">20%</span>
+                            </div>
+                            <!-- Channel 4 -->
+                            <div class="bg-green-950/20 p-2.5 rounded-lg border border-green-900/40 flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-green-200 block flex items-center gap-1">🔍 SEO-продвижение сайта <span class="text-green-500">⭐</span></span>
+                                    <span class="text-[10px] text-green-300 font-bold">Стоимость клиента CAC: 120 ₽</span>
+                                </div>
+                                <span class="text-xs font-black text-green-400 bg-white/5 border border-white/10 px-2 py-0.5 rounded">12%</span>
+                            </div>
+                            <!-- Channel 5 -->
+                            <div class="bg-bg-card-alt p-2.5 rounded-lg border border-white/5 flex items-center justify-between">
+                                <div>
+                                    <span class="text-xs font-bold text-slate-200 block">💬 Социальные сети (SMM)</span>
+                                    <span class="text-[10px] text-slate-400">Стоимость клиента CAC: <strong class="text-slate-300 font-semibold">280 ₽</strong></span>
+                                </div>
+                                <span class="text-xs font-bold text-white bg-white/5 border border-white/10 px-2 py-0.5 rounded">5%</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 10: ABC ANALYSIS (Dark) -->
+    <section id="abc" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">ОПТИМИЗАЦИЯ ПОРТФЕЛЯ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">ABC-АНАЛИЗ АССОРТИМЕНТА УСЛУГ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Классификация оказываемых услуг по степени их вклада в формирование совокупной выручки.
+                </p>
+            </div>
+
+            <!-- Pareto Chart Block (Section 10 Specific combined chart in dark style) -->
+            <div class="bg-bg-white p-6 md:p-10 rounded-3xl border border-white/10 shadow-xl mb-12 reveal">
+                <h3 class="text-xl font-bold font-display text-white mb-2 flex items-center gap-2">
+                    <i class="fa-solid fa-chart-line text-accent"></i> Диаграмма Парето (ABC-Анализ)
+                </h3>
+                <p class="text-xs text-slate-400 mb-6">Отображает кумулятивный процент выручки для всех оказываемых сантехнических услуг.</p>
+                <div class="h-80 md:h-[400px] w-full">
+                    <canvas id="paretoChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Three Columns of ABC Groups in dark palette -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch reveal">
+                
+                <!-- Group A (Dark blue themed) -->
+                <div class="bg-blue-950/20 border border-blue-900/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-blue-900/30">
+                            <h4 class="font-display font-black text-xl text-primary-light flex items-center gap-2">
+                                <span class="bg-primary-dark text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">A</span>
+                                Группа A
+                            </h4>
+                            <span class="text-xs font-extrabold bg-primary/20 text-primary-light px-3 py-1 rounded-full">80% выручки</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">8 ключевых услуг, формирующих основу бизнеса. На них выделяется до 70% рекламного бюджета.</p>
+                        
+                        <ol class="space-y-2 text-xs md:text-sm text-slate-300">
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>1. Устранение протечек</span> <strong class="text-white">18%</strong>
+                            </li>
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>2. Прочистка канализации</span> <strong class="text-white">15%</strong>
+                            </li>
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>3. Замена смесителей</span> <strong class="text-white">12%</strong>
+                            </li>
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>4. Установка счетчиков</span> <strong class="text-white">10%</strong>
+                            </li>
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>5. Устранение засоров</span> <strong class="text-white">9%</strong>
+                            </li>
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>6. Подключение бытовой техники</span> <strong class="text-white">7%</strong>
+                            </li>
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>7. Замена радиаторов отопления</span> <strong class="text-white">5%</strong>
+                            </li>
+                            <li class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>8. Монтаж фильтров очистки</span> <strong class="text-white">4%</strong>
+                            </li>
+                        </ol>
+                    </div>
+                    
+                    <div class="mt-6 bg-primary-dark/20 text-primary-light text-xs p-3 rounded-lg border border-primary/20">
+                        <strong>Стратегический фокус:</strong> Максимальное удержание клиентов и приоритетное продвижение.
+                    </div>
+                </div>
+
+                <!-- Group B (Dark orange themed) -->
+                <div class="bg-orange-950/20 border border-orange-900/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-orange-900/30">
+                            <h4 class="font-display font-black text-xl text-orange-400 flex items-center gap-2">
+                                <span class="bg-orange-500 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">B</span>
+                                Группа B
+                            </h4>
+                            <span class="text-xs font-extrabold bg-orange-500/20 text-orange-300 px-3 py-1 rounded-full">15% выручки</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">10 сопутствующих услуг средней востребованности. Занимают около 20% бюджета продвижения.</p>
+                        
+                        <div class="space-y-2 text-xs md:text-sm text-slate-300">
+                            <div class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>1. Видеодиагностика труб</span> <strong class="text-white">4%</strong>
+                            </div>
+                            <div class="flex justify-between p-2 bg-bg-card-alt rounded-lg border border-white/5">
+                                <span>2. Установка посудомоечных машин</span> <strong class="text-white">3%</strong>
+                            </div>
+                            <div class="p-3 bg-bg-card-alt/60 text-slate-400 text-center rounded-lg border border-white/5 border-dashed text-xs">
+                                + еще 8 специализированных услуг, включая разводку труб полипропиленом, монтаж инсталляций, замену сифонов, гибкой подводки и др.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-orange-500/10 text-orange-300 text-xs p-3 rounded-lg border border-orange-500/20">
+                        <strong>Стратегический фокус:</strong> Кросс-продажи (cross-sell) клиентам, обратившимся по группе А.
+                    </div>
+                </div>
+
+                <!-- Group C (Dark green themed) -->
+                <div class="bg-green-950/20 border border-green-900/50 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <div class="flex items-center justify-between mb-4 pb-2 border-b border-green-900/30">
+                            <h4 class="font-display font-black text-xl text-green-400 flex items-center gap-2">
+                                <span class="bg-green-600 text-white w-8 h-8 rounded-lg flex items-center justify-center font-bold">C</span>
+                                Группа C
+                            </h4>
+                            <span class="text-xs font-extrabold bg-green-500/20 text-green-300 px-3 py-1 rounded-full">5% выручки</span>
+                        </div>
+                        <p class="text-xs text-slate-400 mb-4">10 маловостребованных или экспериментальных услуг. Расход рекламного бюджета минимален.</p>
+                        
+                        <div class="space-y-3">
+                            <div class="p-3.5 bg-bg-card-alt rounded-xl border border-white/5 text-xs leading-relaxed text-slate-300">
+                                <strong class="text-white block mb-1">Новые и специфические услуги:</strong>
+                                Сюда входят монтаж инновационных беспроводных систем защиты от протечек (Neptun, Aquastoroj), установка систем очистки воды методом обратного осмоса и обслуживание котлов отопления в загородных домах.
+                            </div>
+                            <div class="p-3.5 bg-bg-card-alt rounded-xl border border-white/5 text-xs leading-relaxed text-slate-300">
+                                <strong class="text-white block mb-1">Особенности группы:</strong>
+                                Небольшое число заказов при высоком чеке или низкий разовый спрос при высоком потенциале LTV.
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="mt-6 bg-green-500/10 text-green-300 text-xs p-3 rounded-lg border border-green-500/20">
+                        <strong>Стратегический фокус:</strong> Тестовое низкобюджетное продвижение и удержание в качестве фишки.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 11: XYZ ANALYSIS (Dark) -->
+    <section id="xyz" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-light uppercase tracking-widest font-bold text-sm block mb-3">СТАБИЛЬНОСТЬ СПРОСА</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">XYZ-АНАЛИЗ ПО СТАБИЛЬНОСТИ СПРОСА</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Группировка услуг компании по коэффициенту вариации (CV) и стабильности прогнозирования объемов продаж.
+                </p>
+            </div>
+
+            <!-- Three Columns of XYZ Groups (Dark Cards) -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-8 items-stretch reveal">
+                
+                <!-- Group X (Stable) -->
+                <div class="bg-bg-white border border-white/10 rounded-3xl p-8 shadow-xl flex flex-col justify-between hover:translate-y-[-5px] transition duration-300">
+                    <div>
+                        <div class="flex items-center justify-between mb-6 pb-2 border-b border-white/5">
+                            <h4 class="font-display font-black text-lg text-primary-light flex items-center gap-3">
+                                <span class="bg-primary text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm">X</span>
+                                Группа X (Стабильный)
+                            </h4>
+                            <span class="text-xs bg-blue-500/20 text-primary-light font-bold px-2.5 py-1 rounded-full">CV < 15%</span>
+                        </div>
+                        
+                        <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                            Характеризуется высокой регулярностью продаж и легкой прогнозируемостью. Практически полное отсутствие сезонного фактора.
+                        </p>
+                        
+                        <div class="space-y-3 mb-6 text-sm">
+                            <div class="bg-bg-card-alt p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Включает:</span>
+                                <span class="font-semibold text-white">12 услуг общего спроса</span>
+                            </div>
+                            <div class="bg-bg-card-alt p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Примеры:</span>
+                                <span class="font-semibold text-white">Устранение протечек (8%), прочистка канализации (10%), замена смесителей (12%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-primary-dark text-white text-xs p-4 rounded-xl">
+                        <strong>Стратегия продвижения:</strong> Постоянное круглогодичное присутствие в поисковой рекламе. Гарантия стабильности компании.
+                    </div>
+                </div>
+
+                <!-- Group Y (Moderate) -->
+                <div class="bg-bg-white border border-white/10 rounded-3xl p-8 shadow-xl flex flex-col justify-between hover:translate-y-[-5px] transition duration-300">
+                    <div>
+                        <div class="flex items-center justify-between mb-6 pb-2 border-b border-white/5">
+                            <h4 class="font-display font-black text-lg text-orange-400 flex items-center gap-3">
+                                <span class="bg-orange-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm">Y</span>
+                                Группа Y (Умеренный)
+                            </h4>
+                            <span class="text-xs bg-orange-500/20 text-orange-300 font-bold px-2.5 py-1 rounded-full">CV 15 - 35%</span>
+                        </div>
+                        
+                        <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                            Спрос колеблется в зависимости от внешних факторов (сезонность, рекламная активность, праздники). Требует постоянного мониторинга.
+                        </p>
+                        
+                        <div class="space-y-3 mb-6 text-sm">
+                            <div class="bg-bg-card-alt p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Включает:</span>
+                                <span class="font-semibold text-white">10 услуг</span>
+                            </div>
+                            <div class="bg-bg-card-alt p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Примеры:</span>
+                                <span class="font-semibold text-white">Видеодиагностика труб (22%), установка посудомоек (25%), замена радиаторов</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-orange-500 text-white text-xs p-4 rounded-xl">
+                        <strong>Стратегия продвижения:</strong> Сезонная адаптация рекламных бюджетов. Усиление кампаний в фазы естественного роста спроса.
+                    </div>
+                </div>
+
+                <!-- Group Z (Unstable) -->
+                <div class="bg-bg-white border border-white/10 rounded-3xl p-8 shadow-xl flex flex-col justify-between hover:translate-y-[-5px] transition duration-300">
+                    <div>
+                        <div class="flex items-center justify-between mb-6 pb-2 border-b border-white/5">
+                            <h4 class="font-display font-black text-lg text-red-400 flex items-center gap-3">
+                                <span class="bg-red-500 text-white w-10 h-10 rounded-full flex items-center justify-center font-bold text-sm">Z</span>
+                                Группа Z (Нестабильный)
+                            </h4>
+                            <span class="text-xs bg-red-500/20 text-red-300 font-bold px-2.5 py-1 rounded-full">CV > 35%</span>
+                        </div>
+                        
+                        <p class="text-sm text-slate-400 leading-relaxed mb-6">
+                            Крайне нерегулярный спрос, обусловленный случайными факторами. Спрогнозировать продажи невероятно сложно.
+                        </p>
+                        
+                        <div class="space-y-3 mb-6 text-sm">
+                            <div class="bg-bg-card-alt p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Включает:</span>
+                                <span class="font-semibold text-white">6 услуг</span>
+                            </div>
+                            <div class="bg-bg-card-alt p-3 rounded-lg border border-white/5">
+                                <span class="text-xs text-slate-400 block font-bold uppercase">Примеры:</span>
+                                <span class="font-semibold text-white">Обслуживание коттеджей (45%), монтаж полотенцесушителей (40%)</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="bg-red-500 text-white text-xs p-4 rounded-xl">
+                        <strong>Стратегия продвижения:</strong> Быстрое тестовое продвижение в узкие периоды. Минимизация постоянных рекламных издержек.
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 12: ABC-XYZ MATRIX (Dark) -->
+    <section id="abcxyz" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">ИНТЕГРАЦИЯ ДАННЫХ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">МАТРИЦА ABC-XYZ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Итоговая совмещенная матрица для глубокого планирования рекламного бюджета и ассортиментной политики компании.
+                </p>
+            </div>
+
+            <!-- Heatmap table (Dark Theme) -->
+            <div class="bg-bg-white rounded-3xl border border-white/10 shadow-xl overflow-hidden reveal">
+                <div class="p-6 border-b border-white/10 bg-bg-card-alt">
+                    <h3 class="text-lg font-bold text-white font-display flex items-center gap-2">
+                        <i class="fa-solid fa-table-cells text-accent"></i> Совмещенная матрица и рекомендации по управлению
+                    </h3>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse min-w-[800px]">
+                        <thead>
+                            <tr class="bg-[#111C30] text-slate-300 text-xs uppercase font-bold tracking-wider border-b border-white/10">
+                                <th class="py-5 px-6 border-r border-white/10 w-1/4">Категории</th>
+                                <th class="py-5 px-6 border-r border-white/10 text-center w-1/4">X (Стабильный спрос)</th>
+                                <th class="py-5 px-6 border-r border-white/10 text-center w-1/4">Y (Умеренный спрос)</th>
+                                <th class="py-5 px-6 text-center w-1/4">Z (Нестабильный спрос)</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10 text-sm">
+                            <!-- Row A -->
+                            <tr>
+                                <td class="py-6 px-6 bg-[#16253F]/40 border-r border-white/10 font-bold text-white">
+                                    <span class="bg-primary text-white text-xs px-2 py-0.5 rounded mr-2">A</span> Группа A (80% выручки)
+                                </td>
+                                <!-- AX cell -->
+                                <td class="py-6 px-6 border-r border-white/10 bg-blue-950/80 hover:bg-blue-900/80 transition text-center text-blue-100 font-medium">
+                                    <span class="block font-bold text-base mb-1 text-primary-light">AX (5 услуг)</span>
+                                    <span class="text-xs text-slate-300 leading-tight block">Ядро прибыли. Постоянное агрессивное продвижение.</span>
+                                </td>
+                                <!-- AY cell -->
+                                <td class="py-6 px-6 border-r border-white/10 bg-orange-950/60 hover:bg-orange-900/60 transition text-center text-orange-100 font-medium">
+                                    <span class="block font-bold text-base mb-1 text-orange-400">AY (3 услуги)</span>
+                                    <span class="text-xs text-slate-300 leading-tight block">Высокий доход с колебаниями. Сезонные рекламные бюджеты.</span>
+                                </td>
+                                <!-- AZ cell -->
+                                <td class="py-6 px-6 bg-bg-card-alt/30 hover:bg-bg-card-alt/50 transition text-center text-slate-500">
+                                    <span class="block font-bold text-base mb-1">AZ (0 услуг)</span>
+                                    <span class="text-xs leading-tight block">Отсутствуют. Влияние случайных факторов сведено к минимуму.</span>
+                                </td>
+                            </tr>
+                            <!-- Row B -->
+                            <tr>
+                                <td class="py-6 px-6 bg-[#16253F]/40 border-r border-white/10 font-bold text-white">
+                                    <span class="bg-orange-500 text-white text-xs px-2 py-0.5 rounded mr-2">B</span> Группа B (15% выручки)
+                                </td>
+                                <!-- BX cell -->
+                                <td class="py-6 px-6 border-r border-white/10 bg-blue-950/40 hover:bg-blue-950/60 transition text-center text-blue-200">
+                                    <span class="block font-bold text-sm mb-1 text-primary-light">BX (4 услуги)</span>
+                                    <span class="text-xs leading-tight block">Стабильный умеренный доход. Минимальный фоновый бюджет.</span>
+                                </td>
+                                <!-- BY cell -->
+                                <td class="py-6 px-6 border-r border-white/10 bg-orange-950/40 hover:bg-orange-950/50 transition text-center text-orange-200">
+                                    <span class="block font-bold text-sm mb-1 text-orange-400">BY (4 услуги)</span>
+                                    <span class="text-xs leading-tight block">Сезонный умеренный доход. Реклама запускается только в сезон.</span>
+                                </td>
+                                <!-- BZ cell -->
+                                <td class="py-6 px-6 bg-red-950/30 hover:bg-red-950/40 transition text-center text-red-200">
+                                    <span class="block font-bold text-sm mb-1 text-red-400">BZ (2 услуги)</span>
+                                    <span class="text-xs leading-tight block">Случайный спрос. Только тестовое разовое продвижение.</span>
+                                </td>
+                            </tr>
+                            <!-- Row C -->
+                            <tr>
+                                <td class="py-6 px-6 bg-[#16253F]/40 border-r border-white/10 font-bold text-white">
+                                    <span class="bg-green-600 text-white text-xs px-2 py-0.5 rounded mr-2">C</span> Группа C (5% выручки)
+                                </td>
+                                <!-- CX cell -->
+                                <td class="py-6 px-6 border-r border-white/10 bg-bg-card-alt/40 hover:bg-bg-card-alt/60 transition text-center text-slate-300">
+                                    <span class="block font-bold text-xs mb-1 text-slate-300">CX (3 услуги)</span>
+                                    <span class="text-xs leading-tight block">Стабильный, но мелкий доход. Продвижение по SEO, без вложений в контекст.</span>
+                                </td>
+                                <!-- CY cell -->
+                                <td class="py-6 px-6 border-r border-white/10 bg-bg-card-alt/40 hover:bg-bg-card-alt/60 transition text-center text-slate-300">
+                                    <span class="block font-bold text-xs mb-1 text-slate-300">CY (3 услуги)</span>
+                                    <span class="text-xs leading-tight block">Сезонные мелочи. Рекламируются только пакетом с другими услугами.</span>
+                                </td>
+                                <!-- CZ cell -->
+                                <td class="py-6 px-6 bg-red-950/10 hover:bg-red-950/20 transition text-center text-red-300">
+                                    <span class="block font-bold text-xs mb-1 text-red-400">CZ (4 услуги)</span>
+                                    <span class="text-xs leading-tight block">Новинки и нестабильные услуги. Тестовое таргетированное продвижение.</span>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 13: CHANNEL EFFICIENCY (Dark Theme) -->
+    <section id="channels" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-light uppercase tracking-widest font-bold text-sm block mb-3">ОЦЕНКА ЭФФЕКТИВНОСТИ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">ЭФФЕКТИВНОСТЬ РЕКЛАМНЫХ КАНАЛОВ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Интегральные показатели рекламной отдачи по ключевым маркетинговым инструментам, отсортированные по коэффициенту окупаемости (ROI).
+                </p>
+            </div>
+
+            <!-- Key Metric Block -->
+            <div class="bg-gradient-to-r from-primary-dark to-[#16253F] text-white p-8 md:p-10 rounded-3xl shadow-xl mb-12 flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10 reveal">
+                <div class="flex items-center gap-4">
+                    <div class="bg-accent text-white w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shrink-0">
+                        <i class="fa-solid fa-calculator"></i>
+                    </div>
+                    <div>
+                        <span class="text-xs text-blue-200 uppercase font-black tracking-wider block">Ключевой показатель ROI</span>
+                        <h3 class="text-3xl md:text-4xl font-black font-display tracking-tight text-white mt-1">Общий ROI рекламы: 234%</h3>
+                    </div>
+                </div>
+                <div class="bg-white/5 px-6 py-4 rounded-2xl border border-white/10 text-center md:text-right shrink-0">
+                    <span class="text-xs text-slate-300 block uppercase font-bold">Эффективность инвестиций</span>
+                    <p class="text-lg md:text-xl font-bold font-display mt-0.5 text-orange-400">На 1 ₽ в рекламу — 2,34 ₽ прибыли</p>
+                </div>
+            </div>
+
+            <!-- Channel efficiency table (Dark mode rows) -->
+            <div class="bg-bg-white rounded-3xl border border-white/10 shadow-xl overflow-hidden mb-16 reveal">
+                <div class="overflow-x-auto">
+                    <table class="w-full text-left border-collapse">
+                        <thead>
+                            <tr class="bg-[#111C30] text-slate-300 text-xs uppercase font-bold tracking-wider border-b border-white/10">
+                                <th class="py-4 px-6">Рекламный канал</th>
+                                <th class="py-4 px-6">Стоимость лида (CAC)</th>
+                                <th class="py-4 px-6 text-center">Конверсия в сделку</th>
+                                <th class="py-4 px-6 text-center">Выручка канала</th>
+                                <th class="py-4 px-6 text-right">Коэффициент ROI</th>
+                            </tr>
+                        </thead>
+                        <tbody class="divide-y divide-white/10 text-slate-300 font-medium text-sm">
+                            <!-- Channel 1 -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 font-bold text-white">👥 Сарафанное радио (Рекомендации)</td>
+                                <td class="py-4 px-6 text-green-400 font-black">0 ₽</td>
+                                <td class="py-4 px-6 text-center">—</td>
+                                <td class="py-4 px-6 text-center">15,39 млн ₽</td>
+                                <td class="py-4 px-6 text-right text-success font-black text-base">∞ (Абсолют)</td>
+                            </tr>
+                            <!-- Channel 2 -->
+                            <tr class="hover:bg-white/5 transition bg-green-500/5">
+                                <td class="py-4 px-6 font-bold text-white">🔍 SEO-оптимизация сайта</td>
+                                <td class="py-4 px-6">120 ₽</td>
+                                <td class="py-4 px-6 text-center">5,1%</td>
+                                <td class="py-4 px-6 text-center">8,44 млн ₽</td>
+                                <td class="py-4 px-6 text-right text-success font-black text-base">425% 🏆</td>
+                            </tr>
+                            <!-- Channel 3 -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 font-bold text-white">🗺️ Карты (2ГИС / Яндекс.Карты)</td>
+                                <td class="py-4 px-6">180 ₽</td>
+                                <td class="py-4 px-6 text-center">4,2%</td>
+                                <td class="py-4 px-6 text-center">20,22 млн ₽</td>
+                                <td class="py-4 px-6 text-right text-success font-black text-base">281% 🥈</td>
+                            </tr>
+                            <!-- Channel 4 -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 font-bold text-white">📱 Контекстная реклама (Директ)</td>
+                                <td class="py-4 px-6">450 ₽</td>
+                                <td class="py-4 px-6 text-center">2,8%</td>
+                                <td class="py-4 px-6 text-center">13,19 млн ₽</td>
+                                <td class="py-4 px-6 text-right text-slate-300 font-bold">161%</td>
+                            </tr>
+                            <!-- Channel 5 -->
+                            <tr class="hover:bg-white/5 transition">
+                                <td class="py-4 px-6 font-bold text-white">💬 Социальные сети (SMM)</td>
+                                <td class="py-4 px-6">280 ₽</td>
+                                <td class="py-4 px-6 text-center">1,9%</td>
+                                <td class="py-4 px-6 text-center">2,67 млн ₽</td>
+                                <td class="py-4 px-6 text-right text-slate-300 font-bold">125%</td>
+                            </tr>
+                            <!-- Channel 6 -->
+                            <tr class="hover:bg-white/5 transition bg-red-500/5">
+                                <td class="py-4 px-6 font-bold text-white">📄 Наружная реклама и полиграфия</td>
+                                <td class="py-4 px-6">650 ₽</td>
+                                <td class="py-4 px-6 text-center">1,2%</td>
+                                <td class="py-4 px-6 text-center">2,36 млн ₽</td>
+                                <td class="py-4 px-6 text-right text-red-400 font-black">89% ⚠️</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Additional Metrics Grid (4 cards - dark theme) -->
+            <div class="reveal">
+                <h3 class="text-2xl font-black text-white font-display mb-8 text-center">Дополнительные рекламные метрики</h3>
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <!-- Metric 1 -->
+                    <div class="bg-bg-white p-6 rounded-2xl border border-white/10 shadow-lg hover:translate-y-[-3px] transition">
+                        <span class="text-xs text-slate-400 block uppercase font-bold mb-1">CTR объявлений</span>
+                        <h4 class="text-3xl font-black font-display text-primary">4,2%</h4>
+                        <p class="text-xs text-slate-400 mt-2">Средний CTR по кампаниям Яндекс.Директ</p>
+                    </div>
+                    <!-- Metric 2 -->
+                    <div class="bg-bg-white p-6 rounded-2xl border border-white/10 shadow-lg hover:translate-y-[-3px] transition">
+                        <span class="text-xs text-slate-400 block uppercase font-bold mb-1">Конверсия сайта</span>
+                        <h4 class="text-3xl font-black font-display text-primary">5,8%</h4>
+                        <p class="text-xs text-slate-400 mt-2">Конверсия посетителей сайта в заявки и звонки</p>
+                    </div>
+                    <!-- Metric 3 -->
+                    <div class="bg-bg-white p-6 rounded-2xl border border-white/10 shadow-lg hover:translate-y-[-3px] transition">
+                        <span class="text-xs text-slate-400 block uppercase font-bold mb-1">LTV клиента</span>
+                        <h4 class="text-3xl font-black font-display text-primary">3 850 ₽</h4>
+                        <p class="text-xs text-slate-400 mt-2">Жизненный цикл клиента за 1,5 года</p>
+                    </div>
+                    <!-- Metric 4 -->
+                    <div class="bg-bg-white p-6 rounded-2xl border border-white/10 shadow-lg hover:translate-y-[-3px] transition">
+                        <span class="text-xs text-slate-400 block uppercase font-bold mb-1">Конверсия лида</span>
+                        <h4 class="text-3xl font-black font-display text-primary">62%</h4>
+                        <p class="text-xs text-slate-400 mt-2">Конверсия из принятого лида в выполненный заказ</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 14: BREAK-EVEN POINT (Dark Theme) -->
+    <section id="breakeven" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">ФИНАНСОВОЕ МОДЕЛИРОВАНИЕ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">АНАЛИЗ ТОЧКИ БЕЗУБЫТОЧНОСТИ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Оценка финансовой устойчивости рекламных кампаний на примере продвижения флагманской услуги «Устранение протечек».
+                </p>
+            </div>
+
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center mb-16">
+                <!-- SVG / Canvas Graph (Left 7 Columns) -->
+                <div class="lg:col-span-7 bg-bg-white p-6 rounded-3xl border border-white/10 shadow-xl reveal">
+                    <h3 class="text-lg font-bold font-display text-white mb-2 flex items-center gap-2">
+                        <i class="fa-solid fa-chart-area"></i> График безубыточности (CVP-анализ)
+                    </h3>
+                    <p class="text-xs text-slate-400 mb-6">Точка пересечения постоянных затрат на рекламу и маржинального дохода.</p>
+                    
+                    <div class="h-[320px] w-full">
+                        <canvas id="breakEvenChart"></canvas>
+                    </div>
+                </div>
+
+                <!-- Parameters list (Right 5 Columns) -->
+                <div class="lg:col-span-5 flex flex-col justify-between h-full reveal">
+                    <div class="bg-bg-white border border-white/10 rounded-2xl p-6 md:p-8 shadow-xl">
+                        <h4 class="text-xl font-bold font-display text-white mb-4 pb-2 border-b border-white/5 flex items-center gap-2">
+                            <i class="fa-solid fa-calculator text-accent"></i> Параметры кампании
+                        </h4>
+                        
+                        <ul class="space-y-3.5 text-sm text-slate-300">
+                            <li class="flex justify-between">
+                                <span>Бюджет кампании (Пост. затраты):</span> <strong class="text-white">150 000 ₽</strong>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Цена услуги (Выручка на заказ):</span> <strong class="text-white">2 500 ₽</strong>
+                            </li>
+                            <li class="flex justify-between">
+                                <span>Переменные затраты (75% от цены):</span> <strong class="text-white">1 875 ₽</strong>
+                            </li>
+                            <li class="flex justify-between text-primary font-semibold">
+                                <span>Маржинальный доход с заказа:</span> <strong class="text-primary-light">625 ₽</strong>
+                            </li>
+                            
+                            <li class="flex justify-between bg-red-500/10 text-red-200 font-black p-2.5 rounded-lg border border-red-900/30 mt-4">
+                                <span>Точка безубыточности (BEP):</span> <span>240 заказов</span>
+                            </li>
+                            
+                            <li class="flex justify-between bg-green-500/10 text-green-200 font-black p-2.5 rounded-lg border border-green-900/30">
+                                <span>Фактически выполнено:</span> <span>380 заказов (+58%)</span>
+                            </li>
+                        </ul>
+                    </div>
+
+                    <!-- Profit highlight box -->
+                    <div class="bg-gradient-to-r from-green-600 to-green-700 text-white p-6 rounded-2xl shadow-lg mt-6 flex justify-between items-center border border-white/10">
+                        <div>
+                            <span class="text-xs text-green-100 uppercase font-bold tracking-wider block">Чистая прибыль кампании</span>
+                            <h3 class="text-3xl font-black font-display tracking-tight text-white mt-1">87 500 ₽</h3>
+                        </div>
+                        <div class="text-right bg-white/15 px-4 py-2 rounded-xl border border-white/10 shrink-0">
+                            <span class="text-[10px] block text-green-100 uppercase font-semibold">Запас прочности</span>
+                            <span class="text-lg font-black font-display text-white">37%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comparison of campaigns (3 cards - dark) -->
+            <div class="reveal">
+                <h3 class="text-2xl font-black text-white font-display mb-8 text-center">Сравнение запаса прочности рекламных кампаний</h3>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                    <!-- Campaign 1 -->
+                    <div class="bg-bg-white border border-white/10 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <span class="bg-yellow-500/20 text-yellow-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-block mb-3 border border-yellow-800/40">1 место по марже</span>
+                            <h4 class="text-lg font-bold font-display text-white mb-2">Видеодиагностика труб</h4>
+                            <p class="text-xs text-slate-400 mb-4">Премиум-сегмент с высокой маржинальностью и низкими переменными расходами.</p>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-white/5 pt-3">
+                            <span class="text-xs text-slate-400">Превышение BEP:</span>
+                            <span class="text-sm font-black text-success font-display">+76%</span>
+                        </div>
+                    </div>
+                    <!-- Campaign 2 -->
+                    <div class="bg-bg-white border border-white/10 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <span class="bg-primary-dark/20 text-primary-light text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-block mb-3 border border-primary/20">Флагман</span>
+                            <h4 class="text-lg font-bold font-display text-white mb-2">Устранение протечек</h4>
+                            <p class="text-xs text-slate-400 mb-4">Высокий и стабильный органический спрос на аварийные работы.</p>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-white/5 pt-3">
+                            <span class="text-xs text-slate-400">Превышение BEP:</span>
+                            <span class="text-sm font-black text-success font-display">+58%</span>
+                        </div>
+                    </div>
+                    <!-- Campaign 3 -->
+                    <div class="bg-bg-white border border-white/10 rounded-2xl p-6 shadow-xl flex flex-col justify-between">
+                        <div>
+                            <span class="bg-slate-500/25 text-slate-300 text-[10px] font-bold px-2.5 py-0.5 rounded-full inline-block mb-3 border border-white/10">Низкомаржинальная</span>
+                            <h4 class="text-lg font-bold font-display text-white mb-2">Обслуживание коттеджей</h4>
+                            <p class="text-xs text-slate-400 mb-4">Высокие переменные издержки на транспорт и ГСМ при дальних выездах.</p>
+                        </div>
+                        <div class="flex items-center justify-between border-t border-white/5 pt-3">
+                            <span class="text-xs text-slate-400">Превышение BEP:</span>
+                            <span class="text-sm font-black text-orange-400 font-display">+29%</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 15: CUSTOMER SURVEY (Dark Theme) -->
+    <section id="survey" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-primary-light uppercase tracking-widest font-bold text-sm block mb-3">ИССЛЕДОВАНИЕ МНЕНИЯ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">РЕЗУЛЬТАТЫ АНКЕТИРОВАНИЯ КЛИЕНТОВ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Анализ данных социологического опроса клиентской базы для совершенствования рекламной стратегии.
+                </p>
+            </div>
+
+            <!-- Methodology highlight (Dark style) -->
+            <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl text-center mb-12 max-w-4xl mx-auto reveal">
+                <div class="flex flex-col sm:flex-row items-center justify-center gap-6 text-slate-300 font-medium">
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-clipboard-user text-accent text-lg"></i> 200 респондентов</span>
+                    <span class="hidden sm:inline text-slate-700">|</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-users text-primary-light text-lg"></i> 65% B2C (физлица), 35% B2B (юрлица)</span>
+                    <span class="hidden sm:inline text-slate-700">|</span>
+                    <span class="flex items-center gap-2"><i class="fa-solid fa-calendar-check text-green-400 text-lg"></i> 15 - 20 июня 2026 г.</span>
+                </div>
+            </div>
+
+            <!-- Charts Layout -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch mb-12 reveal">
+                <!-- Sources Pie Chart (Left) -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold font-display text-white mb-2">Из каких источников Вы узнали о компании?</h3>
+                        <p class="text-xs text-slate-400 mb-6">Каналы первоначального контакта</p>
+                        <div class="h-64 flex items-center justify-center mb-6">
+                            <canvas id="surveySourcesChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Horizontal Preferences Bar Chart (Right) -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-6 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-lg font-bold font-display text-white mb-2">Предпочтения по каналам связи</h3>
+                        <p class="text-xs text-slate-400 mb-6">Удобный способ коммуникации по мнению клиентов</p>
+                        <div class="h-64 flex items-center justify-center mb-6">
+                            <canvas id="surveyChannelsChart"></canvas>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Lower Row: Satisfaction and Loyalty Progress Bars -->
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch reveal">
+                <!-- Satisfaction card -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-8 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold font-display text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-face-smile text-green-400"></i> Индекс удовлетворенности
+                        </h3>
+                        <p class="text-xs text-slate-400 mb-6">Оценка соответствия рекламного обещания и реального качества услуг</p>
+                        
+                        <div class="space-y-6">
+                            <div>
+                                <div class="flex justify-between text-sm font-bold mb-1.5">
+                                    <span class="text-slate-300">Понятность рекламного посыла</span>
+                                    <span class="text-primary-light">78% ✅</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                                    <div class="bg-primary h-full rounded-full" style="width: 78%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-sm font-bold mb-1.5">
+                                    <span class="text-slate-300">Соответствие качеству работ</span>
+                                    <span class="text-primary-light">82% ✅</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-3 rounded-full overflow-hidden">
+                                    <div class="bg-green-600 h-full rounded-full" style="width: 82%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loyalty card -->
+                <div class="bg-bg-white rounded-2xl border border-white/10 p-8 shadow-xl flex flex-col justify-between">
+                    <div>
+                        <h3 class="text-xl font-bold font-display text-white mb-2 flex items-center gap-2">
+                            <i class="fa-solid fa-gift text-accent"></i> Программа лояльности
+                        </h3>
+                        <p class="text-xs text-slate-400 mb-6">Текущая глубина вовлеченности в программу лояльности</p>
+                        
+                        <div class="space-y-4">
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-300">Знают о наличии программы лояльности</span>
+                                    <span class="text-white">52%</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-accent h-full rounded-full" style="width: 52%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-300">Пользуются скидками/кешбэком</span>
+                                    <span class="text-white">35%</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-accent h-full rounded-full" style="width: 35%"></div>
+                                </div>
+                            </div>
+                            <div>
+                                <div class="flex justify-between text-xs font-bold mb-1">
+                                    <span class="text-slate-300">Рекомендуют программу друзьям</span>
+                                    <span class="text-white">28%</span>
+                                </div>
+                                <div class="w-full bg-slate-800 h-2 rounded-full overflow-hidden">
+                                    <div class="bg-accent h-full rounded-full" style="width: 28%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 16: CONCLUSIONS AND RECOMMENDATIONS (Dark Theme) -->
+    <section id="recommendations" class="py-24 px-4 bg-bg-light border-b border-white/5 scroll-mt-12">
+        <div class="max-w-7xl mx-auto">
+            <!-- Header -->
+            <div class="text-center mb-16 reveal">
+                <span class="text-accent uppercase tracking-widest font-bold text-sm block mb-3">РЕЗЮМЕ ПРАКТИКИ</span>
+                <h2 class="text-3xl md:text-5xl font-black text-white font-display mb-4">ВЫВОДЫ И РЕКОМЕНДАЦИИ</h2>
+                <p class="text-lg text-slate-400 max-w-2xl mx-auto">
+                    Итоговые выводы о проделанной работе и практические предложения по оптимизации маркетинга.
+                </p>
+            </div>
+
+            <!-- Block 1: Achievements -->
+            <div class="mb-16 reveal">
+                <h3 class="text-2xl font-black text-white font-display mb-8 flex items-center gap-3">
+                    <i class="fa-solid fa-circle-check text-green-500"></i> Ключевые достижения (выводы)
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                    <!-- Achievement 1 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl text-center">
+                        <div class="text-green-500 text-3xl mb-3"><i class="fa-solid fa-circle-check"></i></div>
+                        <h4 class="font-display font-bold text-sm text-white mb-2">Рост выручки</h4>
+                        <p class="text-xs text-slate-400">Увеличение выручки на 15,0% (до 58,2 млн ₽) за год.</p>
+                    </div>
+                    <!-- Achievement 2 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl text-center">
+                        <div class="text-green-500 text-3xl mb-3"><i class="fa-solid fa-circle-check"></i></div>
+                        <h4 class="font-display font-bold text-sm text-white mb-2">Высокий ROI</h4>
+                        <p class="text-xs text-slate-400">Окупаемость рекламных инвестиций составила 234%.</p>
+                    </div>
+                    <!-- Achievement 3 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl text-center">
+                        <div class="text-green-500 text-3xl mb-3"><i class="fa-solid fa-circle-check"></i></div>
+                        <h4 class="font-display font-bold text-sm text-white mb-2">Финансовая модель</h4>
+                        <p class="text-xs text-slate-400">Все основные рекламные кампании прибыльны (запас >25%).</p>
+                    </div>
+                    <!-- Achievement 4 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl text-center">
+                        <div class="text-green-500 text-3xl mb-3"><i class="fa-solid fa-circle-check"></i></div>
+                        <h4 class="font-display font-bold text-sm text-white mb-2">Лояльность</h4>
+                        <p class="text-xs text-slate-400">Удовлетворенность клиентов качеством на уровне 78-82%.</p>
+                    </div>
+                    <!-- Achievement 5 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl text-center">
+                        <div class="text-green-500 text-3xl mb-3"><i class="fa-solid fa-circle-check"></i></div>
+                        <h4 class="font-display font-bold text-sm text-white mb-2">Сила бренда</h4>
+                        <p class="text-xs text-slate-400">20-летний авторитет и безукоризненный рейтинг 4.8/5.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 2: Recommendations -->
+            <div class="mb-16 reveal">
+                <h3 class="text-2xl font-black text-white font-display mb-8 flex items-center gap-3">
+                    <i class="fa-solid fa-lightbulb text-accent"></i> Рекомендации по оптимизации продвижения
+                </h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Rec 1 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl hover:translate-y-[-5px] hover:border-primary/20 transition duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-blue-500/10 text-primary flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-chart-pie"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white mb-2">1. Перераспределить бюджет</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Оптимизировать каналы по окупаемости: повысить бюджет SEO с 12% до 18% и Карт с 20% до 25%. Снизить долю низкоэффективного Яндекс.Директа с 35% до 28% и сократить наружную рекламу до 5%.
+                        </p>
+                    </div>
+                    <!-- Rec 2 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl hover:translate-y-[-5px] hover:border-primary/20 transition duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-orange-500/10 text-accent flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-gifts"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white mb-2">2. Развивать лояльность</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Усилить фокус на поощрении повторных обращений: внедрить реферальную систему «Приведи друга» и кешбэк-систему баллов. Это гарантирует лавинообразный рост бесплатного «сарафанного радио».
+                        </p>
+                    </div>
+                    <!-- Rec 3 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl hover:translate-y-[-5px] hover:border-primary/20 transition duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-purple-500/10 text-purple-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-brands fa-whatsapp"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white mb-2">3. Усилить мессенджеры</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Поскольку 65% клиентов предпочитают мгновенную связь, необходимо интегрировать чат-ботов и онлайн-операторов в WhatsApp и Telegram для сокращения времени ответа до 1-2 минут.
+                        </p>
+                    </div>
+                    <!-- Rec 4 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl hover:translate-y-[-5px] hover:border-primary/20 transition duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-green-500/10 text-green-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-database"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white mb-2">4. Интеграция CRM</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Осуществить внедрение сквозной сквозной сквозной сквозной аналитики на базе современной CRM-системы для оцифровки каждого потраченного рекламного рубля.
+                        </p>
+                    </div>
+                    <!-- Rec 5 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl hover:translate-y-[-5px] hover:border-primary/20 transition duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-yellow-500/10 text-yellow-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-calendar-alt"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white mb-2">5. Сезонный маркетинг Y</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Для услуг группы Y с выраженными сезонными волнами (монтаж батарей, опрессовка) разработать опережающие рекламные запуски с акциями и скидками за 1 месяц до пика сезона.
+                        </p>
+                    </div>
+                    <!-- Rec 6 -->
+                    <div class="bg-bg-white border border-white/10 p-6 rounded-2xl shadow-xl hover:translate-y-[-5px] hover:border-primary/20 transition duration-300">
+                        <div class="w-12 h-12 rounded-xl bg-red-500/10 text-red-400 flex items-center justify-center text-xl mb-4">
+                            <i class="fa-solid fa-flask"></i>
+                        </div>
+                        <h4 class="font-display font-bold text-base text-white mb-2">6. Тесты для группы Z</h4>
+                        <p class="text-xs text-slate-400 leading-relaxed">
+                            Экспериментальные услуги группы Z рекламировать узкоспециализированными целевыми лендингами со строго лимитированными суточными бюджетами контекста.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Block 3: Expected effect -->
+            <div class="bg-gradient-to-r from-primary-dark to-primary text-white p-8 md:p-10 rounded-3xl shadow-xl flex flex-col md:flex-row items-center justify-between gap-6 border border-white/10 reveal">
+                <div class="flex items-center gap-4">
+                    <div class="bg-white/10 w-16 h-16 rounded-2xl flex items-center justify-center text-3xl shrink-0 text-orange-400">
+                        <i class="fa-solid fa-chart-line"></i>
+                    </div>
+                    <div>
+                        <h4 class="text-xl font-bold font-display text-white">Ожидаемый экономический эффект от внедрения рекомендаций</h4>
+                        <p class="text-sm text-blue-100 mt-1">Оценен на основе математического моделирования коммерческих показателей.</p>
+                    </div>
+                </div>
+                <div class="grid grid-cols-2 gap-4 shrink-0 w-full md:w-auto">
+                    <div class="bg-white/10 px-4 py-3 rounded-xl text-center border border-white/10">
+                        <span class="text-[10px] uppercase font-bold text-blue-200 block">Затраты CAC</span>
+                        <span class="text-lg font-black text-orange-400">-15-20% 📉</span>
+                    </div>
+                    <div class="bg-white/10 px-4 py-3 rounded-xl text-center border border-white/10">
+                        <span class="text-[10px] uppercase font-bold text-blue-200 block">Выручка</span>
+                        <span class="text-lg font-black text-green-400">+10-12% 📈</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- SECTION 17: FOOTER (Dark Slate themed) -->
+    <footer class="bg-[#050B1A] text-white py-16 px-4 relative overflow-hidden border-t border-white/5">
+        <div class="absolute inset-0 pointer-events-none opacity-5">
+            <svg class="absolute bottom-0 right-0 w-[500px] h-[500px]" viewBox="0 0 200 200" fill="currentColor">
+                <circle cx="100" cy="100" r="100" />
+            </svg>
+        </div>
+
+        <div class="relative z-10 max-w-5xl mx-auto text-center flex flex-col items-center">
+            
+            <h2 class="text-4xl md:text-5xl font-black font-display tracking-tight text-white mb-6 uppercase">
+                СПАСИБО ЗА ВНИМАНИЕ!
+            </h2>
+            
+            <div class="w-24 h-1 bg-accent mb-8 rounded-full"></div>
+            
+            <p class="text-lg md:text-xl text-blue-300 mb-6 font-medium font-display">
+                Муртазин Артем | Группа РЕК-302
+            </p>
+            
+            <p class="text-sm text-slate-400 max-w-md leading-relaxed mb-8 opacity-85">
+                ГАПОУ СО «Колледж управления и сервиса «Стиль»<br>
+                Производственная практика в ООО «Труба-Дело» (г. Екатеринбург)<br>
+                2026 год
+            </p>
+            
+            <span class="text-xs text-blue-400 block mb-10 font-bold uppercase tracking-wider">
+                Отчет по производственной практике ПМ 04
+            </span>
+            
+            <!-- Back to top button inside footer -->
+            <button onclick="scrollToTop()" class="bg-accent hover:bg-accent-light text-white font-bold px-6 py-3 rounded-full shadow-md flex items-center gap-2 transition hover:scale-105 active:scale-95 cursor-pointer">
+                <i class="fa-solid fa-arrow-up"></i> Наверх к началу
+            </button>
+        </div>
+    </footer>
+
+    <!-- Fixed Floating Scroll-up Button -->
+    <div id="to-top-btn" onclick="scrollToTop()" class="group">
+        <i class="fa-solid fa-chevron-up text-lg group-hover:translate-y-[-2px] transition"></i>
+    </div>
+
+    <!-- Script Block containing all charts, animations, counter ups, and SWOT interactivity -->
+    <script>
+        // Global Chart Registry to avoid memory leaks or duplicate renders
+        const chartInstances = {};
+
+        // Custom chart default options for Dark Mode (Slate / Blue Theme)
+        const darkChartDefaults = {
+            color: '#E2E8F0', // General text label colors
+            font: {
+                family: 'Inter',
+                size: 11
+            },
+            grid: {
+                color: 'rgba(255, 255, 255, 0.08)' // Gridlines
+            }
+        };
+
+        // Smooth Scroll function
+        function scrollToTop() {
+            window.scrollTo({
+                top: 0,
+                behavior: 'smooth'
+            });
+        }
+
+        // Handle Scroll Progress and Floating Scroll-up Button visibility
+        window.addEventListener('scroll', () => {
+            const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+            const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (winScroll / height) * 100;
+            
+            // Progress Bar
+            document.getElementById('progress-bar').style.width = scrolled + '%';
+
+            // Floating Button
+            const btn = document.getElementById('to-top-btn');
+            if (winScroll > 500) {
+                btn.classList.add('show');
+            } else {
+                btn.classList.remove('show');
+            }
+        });
+
+        // SWOT Matrix Toggle Details Interactivity
+        function toggleSwotDetails(quadrant) {
+            const element = document.getElementById(`${quadrant}-details`);
+            const arrow = document.getElementById(`${quadrant}-arrow`);
+            
+            if (element.classList.contains('hidden')) {
+                element.classList.remove('hidden');
+                arrow.style.transform = 'rotate(180deg)';
+            } else {
+                element.classList.add('hidden');
+                arrow.style.transform = 'rotate(0deg)';
+            }
+        }
+
+        // Number Counter Animation
+        function startCounterAnimation(el) {
+            const target = parseFloat(el.getAttribute('data-target'));
+            const isFloat = el.classList.contains('counter-float');
+            const duration = 2000; // ms
+            const frameRate = 1000 / 60; // 60fps
+            const totalFrames = Math.round(duration / frameRate);
+            let frame = 0;
+
+            const timer = setInterval(() => {
+                frame++;
+                const progress = frame / totalFrames;
+                // Ease out cubic
+                const easeProgress = 1 - Math.pow(1 - progress, 3);
+                const currentVal = target * easeProgress;
+
+                if (isFloat) {
+                    el.innerText = currentVal.toFixed(1);
+                } else {
+                    el.innerText = Math.floor(currentVal).toLocaleString('ru-RU');
+                }
+
+                if (frame >= totalFrames) {
+                    clearInterval(timer);
+                    if (isFloat) {
+                        el.innerText = target.toFixed(1);
+                    } else {
+                        el.innerText = target.toLocaleString('ru-RU');
+                    }
+                }
+            }, frameRate);
+        }
+
+        // Setup Intersection Observer for scrolling effects and triggering animations
+        const revealCallback = (entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('active');
+                    
+                    // Trigger counters inside this section
+                    const counters = entry.target.querySelectorAll('.counter, .counter-float');
+                    counters.forEach(counter => {
+                        if (!counter.classList.contains('counted')) {
+                            counter.classList.add('counted');
+                            startCounterAnimation(counter);
+                        }
+                    });
+
+                    // Trigger Chart Render specifically when those container sections come into viewport
+                    if (entry.target.id === 'marketing') {
+                        renderMarketingBudgetChart();
+                    }
+                    if (entry.target.id === 'sales') {
+                        renderClientSegmentChart();
+                    }
+                    if (entry.target.id === 'abc') {
+                        renderParetoChart();
+                    }
+                    if (entry.target.id === 'breakeven') {
+                        renderBreakEvenChart();
+                    }
+                    if (entry.target.id === 'survey') {
+                        renderSurveyCharts();
+                    }
+                }
+            });
+        };
+
+        const observer = new IntersectionObserver(revealCallback, {
+            root: null,
+            threshold: 0.15
+        });
+
+        // Observe all sections and components with "reveal" class
+        document.querySelectorAll('section, .reveal').forEach(el => {
+            el.classList.add('reveal');
+            observer.observe(el);
+        });
+
+        // SECTION 6: MARKETING BUDGET CHART (Pie)
+        const budgetData = [
+            { label: 'Контекстная реклама', value: 35, valRub: '1,12 млн ₽', color: '#3498DB' },
+            { label: '2ГИС и Яндекс.Карты', value: 20, valRub: '0,64 млн ₽', color: '#FF6B35' },
+            { label: 'SEO-продвижение', value: 12, valRub: '0,38 млн ₽', color: '#2ECC71' },
+            { label: 'SMM-маркетинг', value: 10, valRub: '0,32 млн ₽', color: '#9B59B6' },
+            { label: 'Полиграфия и флаеры', value: 9, valRub: '0,29 млн ₽', color: '#E74C3C' },
+            { label: 'Программы лояльности', value: 8, valRub: '0,26 млн ₽', color: '#F1C40F' },
+            { label: 'Прочие каналы', value: 6, valRub: '0,19 млн ₽', color: '#95A5A6' }
+        ];
+
+        function renderMarketingBudgetChart() {
+            if (chartInstances['marketingBudgetChart']) return; // avoid duplicates
+
+            const ctx = document.getElementById('marketingBudgetChart').getContext('2d');
+            
+            // Build custom legend
+            const legendContainer = document.getElementById('customLegendContainer');
+            legendContainer.innerHTML = ''; // reset
+
+            budgetData.forEach((item, index) => {
+                const legendEl = document.createElement('div');
+                legendEl.className = 'flex items-center gap-3 bg-[#16253F] p-3.5 rounded-xl border border-white/5 shadow-sm cursor-pointer hover:border-primary transition';
+                legendEl.innerHTML = `
+                    <span class="w-4 h-4 rounded-full shrink-0" style="background-color: ${item.color}"></span>
+                    <div class="flex-1">
+                        <span class="text-xs font-bold text-white block">${item.label}</span>
+                        <span class="text-xs text-slate-400 font-semibold">${item.value}% (${item.valRub})</span>
+                    </div>
+                `;
+                
+                // Clicking custom legend highlights segment in Chart.js
+                legendEl.onclick = () => {
+                    const activeSegment = chartInstances['marketingBudgetChart'].tooltip.getActiveElements();
+                    chartInstances['marketingBudgetChart'].setActiveElements([{ datasetIndex: 0, index: index }]);
+                    chartInstances['marketingBudgetChart'].tooltip.setActiveElements([{ datasetIndex: 0, index: index }], { x: 0, y: 0 });
+                    chartInstances['marketingBudgetChart'].update();
+                };
+
+                legendContainer.appendChild(legendEl);
+            });
+
+            chartInstances['marketingBudgetChart'] = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: budgetData.map(d => d.label),
+                    datasets: [{
+                        data: budgetData.map(d => d.value),
+                        backgroundColor: budgetData.map(d => d.color),
+                        borderWidth: 2,
+                        borderColor: '#111C30' // Match section dark background
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            display: false // hide default, use interactive custom list
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const index = context.dataIndex;
+                                    return ` ${budgetData[index].label}: ${budgetData[index].value}% (${budgetData[index].valRub})`;
+                                }
+                            }
+                        }
+                    },
+                    cutout: '65%'
+                }
+            });
+        }
+
+        // SECTION 9: CLIENT SEGMENT CHART (Pie)
+        function renderClientSegmentChart() {
+            if (chartInstances['clientSegmentChart']) return;
+
+            const ctx = document.getElementById('clientSegmentChart').getContext('2d');
+            chartInstances['clientSegmentChart'] = new Chart(ctx, {
+                type: 'pie',
+                data: {
+                    labels: ['B2C (физлица)', 'B2B (ТСЖ/УК)', 'Коммерческие орг.'],
+                    datasets: [{
+                        data: [70, 20, 10],
+                        backgroundColor: ['#3498DB', '#FF6B35', '#2ECC71'],
+                        borderWidth: 2,
+                        borderColor: '#111C30'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                            labels: {
+                                color: darkChartDefaults.color,
+                                font: {
+                                    size: 11,
+                                    family: 'Inter'
+                                },
+                                boxWidth: 12
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // SECTION 10: PARETO CHART (Combined Bar & Line)
+        function renderParetoChart() {
+            if (chartInstances['paretoChart']) return;
+
+            const ctx = document.getElementById('paretoChart').getContext('2d');
+            
+            // Labels for top services
+            const labels = [
+                'Устранение протечек', 'Прочистка кан.', 'Замена смесит.', 'Установка счет.', 
+                'Прочистка засор.', 'Подкл. техн.', 'Замена радиат.', 'Монтаж фильтр.', 
+                'Видеодиагн.', 'Посудомойки', 'Прочее B'
+            ];
+            
+            // Revenue percentages for each (total 100%)
+            const barData = [18, 15, 12, 10, 9, 7, 5, 4, 4, 3, 13];
+            
+            // Cumulative line percentages
+            const lineData = [18, 33, 45, 55, 64, 71, 76, 80, 84, 87, 100];
+
+            chartInstances['paretoChart'] = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [
+                        {
+                            label: 'Кумулятивный процент (%)',
+                            type: 'line',
+                            data: lineData,
+                            borderColor: '#FF6B35',
+                            borderWidth: 3,
+                            backgroundColor: '#FF6B35',
+                            fill: false,
+                            yAxisID: 'yCumulative',
+                            tension: 0.1,
+                            pointStyle: 'circle',
+                            pointRadius: 4,
+                            pointHoverRadius: 7
+                        },
+                        {
+                            label: 'Доля в выручке (%)',
+                            data: barData,
+                            // Color bars by ABC group
+                            backgroundColor: function(context) {
+                                const index = context.dataIndex;
+                                if (index <= 7) return '#3498DB'; // Group A
+                                if (index <= 9) return '#FF8C5A'; // Group B
+                                return '#2ECC71'; // Group C / other
+                            },
+                            borderRadius: 4,
+                            yAxisID: 'yRevenue'
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        yRevenue: {
+                            type: 'linear',
+                            position: 'left',
+                            min: 0,
+                            max: 25,
+                            ticks: {
+                                color: darkChartDefaults.color,
+                                callback: function(value) { return value + '%'; }
+                            },
+                            grid: {
+                                color: darkChartDefaults.grid.color
+                            },
+                            title: {
+                                display: true,
+                                text: 'Доля отдельной услуги (%)',
+                                color: darkChartDefaults.color,
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        yCumulative: {
+                            type: 'linear',
+                            position: 'right',
+                            min: 0,
+                            max: 100,
+                            grid: {
+                                drawOnChartArea: false
+                            },
+                            ticks: {
+                                color: darkChartDefaults.color,
+                                callback: function(value) { return value + '%'; }
+                            },
+                            title: {
+                                display: true,
+                                text: 'Нарастающий итог (%)',
+                                color: darkChartDefaults.color,
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        x: {
+                            ticks: {
+                                color: darkChartDefaults.color,
+                                font: { size: 9 }
+                            },
+                            grid: {
+                                color: darkChartDefaults.grid.color
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: darkChartDefaults.color
+                            }
+                        },
+                        tooltip: {
+                            shared: true,
+                            intersect: false
+                        }
+                    }
+                }
+            });
+        }
+
+        // SECTION 14: BREAK-EVEN CHART (Multi-dataset line)
+        function renderBreakEvenChart() {
+            if (chartInstances['breakEvenChart']) return;
+
+            const ctx = document.getElementById('breakEvenChart').getContext('2d');
+            
+            // X-Axis points: orders volume from 0 to 400
+            const xLabels = [0, 50, 100, 150, 200, 240, 300, 350, 380, 400];
+            
+            // Line 1: Total Cost = Fixed (150k) + Variable (1875 per order)
+            const totalCosts = xLabels.map(orders => 150000 + (orders * 1875));
+            
+            // Line 2: Total Revenue = 2500 per order
+            const totalRevenue = xLabels.map(orders => orders * 2500);
+
+            chartInstances['breakEvenChart'] = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: xLabels,
+                    datasets: [
+                        {
+                            label: 'Суммарные затраты (руб)',
+                            data: totalCosts,
+                            borderColor: '#E74C3C',
+                            borderWidth: 2,
+                            fill: false,
+                            pointRadius: 0
+                        },
+                        {
+                            label: 'Выручка от заказов (руб)',
+                            data: totalRevenue,
+                            borderColor: '#2ECC71',
+                            borderWidth: 2.5,
+                            fill: false,
+                            pointRadius: 0
+                        }
+                    ]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: false,
+                    scales: {
+                        x: {
+                            ticks: {
+                                color: darkChartDefaults.color
+                            },
+                            grid: {
+                                color: darkChartDefaults.grid.color
+                            },
+                            title: {
+                                display: true,
+                                text: 'Количество выполненных заказов (шт)',
+                                color: darkChartDefaults.color,
+                                font: { weight: 'bold' }
+                            }
+                        },
+                        y: {
+                            ticks: {
+                                color: darkChartDefaults.color,
+                                callback: function(value) {
+                                    return (value / 1000) + 'k ₽';
+                                }
+                            },
+                            grid: {
+                                color: darkChartDefaults.grid.color
+                            },
+                            title: {
+                                display: true,
+                                text: 'Деньги (руб)',
+                                color: darkChartDefaults.color,
+                                font: { weight: 'bold' }
+                            }
+                        }
+                    },
+                    plugins: {
+                        legend: {
+                            labels: {
+                                color: darkChartDefaults.color
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
+        // SECTION 15: SURVEY RESULTS CHARTS
+        function renderSurveyCharts() {
+            // Source Pie Chart
+            if (!chartInstances['surveySourcesChart']) {
+                const ctx1 = document.getElementById('surveySourcesChart').getContext('2d');
+                chartInstances['surveySourcesChart'] = new Chart(ctx1, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['Карты (2ГИС/Яндекс)', 'Рекомендации', 'Контекст (Яндекс)', 'Сайт компании', 'Социальные сети', 'Прочие'],
+                        datasets: [{
+                            data: [42, 28, 15, 8, 5, 2],
+                            backgroundColor: ['#3498DB', '#FF6B35', '#2ECC71', '#5DADE2', '#9B59B6', '#95A5A6'],
+                            borderWidth: 1.5,
+                            borderColor: '#111C30'
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        plugins: {
+                            legend: {
+                                position: 'right',
+                                labels: {
+                                    color: darkChartDefaults.color,
+                                    boxWidth: 12,
+                                    font: { size: 10, family: 'Inter' }
+                                }
+                            }
+                        }
+                    }
+                });
+            }
+
+            // Connection preferences bar chart
+            if (!chartInstances['surveyChannelsChart']) {
+                const ctx2 = document.getElementById('surveyChannelsChart').getContext('2d');
+                chartInstances['surveyChannelsChart'] = new Chart(ctx2, {
+                    type: 'bar',
+                    data: {
+                        labels: ['Мессенджеры', 'SMS', 'Эл. почта', 'Звонок', 'Соцсети'],
+                        datasets: [{
+                            label: 'Процент предпочтений (%)',
+                            data: [65, 45, 38, 25, 18],
+                            backgroundColor: '#3498DB',
+                            borderRadius: 6,
+                            maxBarThickness: 30
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: false,
+                        indexAxis: 'y', // horizontal bar chart
+                        scales: {
+                            x: {
+                                max: 100,
+                                ticks: {
+                                    color: darkChartDefaults.color,
+                                    callback: function(v) { return v + '%'; }
+                                },
+                                grid: {
+                                    color: darkChartDefaults.grid.color
+                                }
+                            },
+                            y: {
+                                ticks: {
+                                    color: darkChartDefaults.color
+                                },
+                                grid: {
+                                    color: darkChartDefaults.grid.color
+                                }
+                            }
+                        },
+                        plugins: {
+                            legend: { display: false }
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+</body>
+</html>
