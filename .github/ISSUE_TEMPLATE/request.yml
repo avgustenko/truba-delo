@@ -1,0 +1,18 @@
+name: Просьба
+description: Что сделать или поменять на странице
+labels: [enhancement]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Что сделать
+      description: Своими словами. Можно приложить снимок экрана — перетащите его сюда.
+      placeholder: В разделе «…» поменять…
+    validations:
+      required: true
+  - type: input
+    id: where
+    attributes:
+      label: Где
+      description: Раздел страницы, если понятно
+      placeholder: Шапка, раздел, подвал…

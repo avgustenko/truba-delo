@@ -1,0 +1,14 @@
+# Dependabot: раз в месяц — предложение обновить действия GitHub Actions.
+# Библиотек у страницы нет (один index.html), поэтому только Actions.
+# Что делать с предложением — GITHUB.md.
+version: 2
+updates:
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: monthly
+    groups:
+      actions:
+        patterns: ['*']
+    commit-message:
+      prefix: 'GitHub Actions:'

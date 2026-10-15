@@ -1,0 +1,48 @@
+name: Журнал изменений
+
+# Каждая отправка с изменениями должна дописывать CHANGELOG.md: когда, кто,
+# что и где изменено. Нет записи — проверка красная, владелец это видит.
+on:
+  push:
+  pull_request:
+
+jobs:
+  check:
+    # Предложения Dependabot журнал не пишут: запись делает тот, кто их принимает
+    if: github.actor != 'dependabot[bot]'
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Изменения записаны в CHANGELOG.md
+        env:
+          BEFORE: ${{ github.event.before }}
+          BASE: ${{ github.event.pull_request.base.sha }}
+        run: |
+          # С какого места сравнивать: начало запроса на слияние, прошлое состояние ветки
+          # или, для новой ветки, общий предок с main
+          if [ -n "$BASE" ]; then
+            from="$BASE"
+          elif [ -n "$BEFORE" ] && [ "$BEFORE" != "0000000000000000000000000000000000000000" ] && git cat-file -e "$BEFORE^{commit}" 2>/dev/null; then
+            from="$BEFORE"
+          else
+            from="$(git merge-base origin/main HEAD 2>/dev/null || git rev-list --max-parents=0 HEAD | tail -1)"
+          fi
+
+          changed="$(git diff --name-only "$from" HEAD)"
+          if [ -z "$changed" ]; then
+            echo "Изменений нет"
+            exit 0
+          fi
+          echo "Изменённые файлы:"
+          echo "$changed"
+
+          if echo "$changed" | grep -qx 'CHANGELOG.md'; then
+            echo "Журнал изменений дописан"
+            exit 0
+          fi
+          echo "::error::Изменения не записаны в CHANGELOG.md. Добавьте запись: когда, кто, зачем, что и где изменено (образец — в начале CHANGELOG.md)."
+          exit 1

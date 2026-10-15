@@ -1,0 +1,62 @@
+name: Версия
+
+# Версия — метка vГГГГ.ММ.ДД на последнем коммите main (вторая за день —
+# vГГГГ.ММ.ДД.2) и страница в Releases со списком правок с прошлой версии.
+# Ставится кнопкой: Actions → «Версия» → Run workflow (ставит тот, кто работал,
+# в конце дня с правками — GITHUB.md).
+on:
+  workflow_dispatch:
+  push:
+    tags: ['v*']
+
+permissions:
+  contents: write
+
+concurrency:
+  group: release
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+
+      - name: Метка версии
+        id: tag
+        env:
+          PUSHED: ${{ github.ref_type == 'tag' && github.ref_name || '' }}
+        run: |
+          if [ -n "$PUSHED" ]; then
+            echo "tag=$PUSHED" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+          # Дата — по Екатеринбургу; такая метка уже есть — .2, .3 …
+          base="v$(TZ=Asia/Yekaterinburg date +%Y.%m.%d)"
+          tag="$base"
+          n=2
+          while git rev-parse -q --verify "refs/tags/$tag" >/dev/null; do
+            tag="$base.$n"
+            n=$((n + 1))
+          done
+          git tag "$tag"
+          git push origin "$tag"
+          echo "tag=$tag" >> "$GITHUB_OUTPUT"
+
+      - name: Страница версии
+        env:
+          GH_TOKEN: ${{ github.token }}
+          TAG: ${{ steps.tag.outputs.tag }}
+        run: |
+          prev="$(git describe --tags --abbrev=0 "$TAG^" 2>/dev/null || true)"
+          range="${prev:+$prev..}$TAG"
+          {
+            echo "Правки ${prev:+с версии $prev }по $TAG. Подробно — в CHANGELOG.md."
+            echo
+            # Служебные коммиты выкладки и журнала — не правки
+            git log --no-merges --pretty='- %s' "$range" | grep -v -e '^- Журнал:' || true
+          } > notes.md
+          gh release create "$TAG" --title "$TAG" --notes-file notes.md

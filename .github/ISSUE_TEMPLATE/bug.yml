@@ -1,0 +1,25 @@
+name: Ошибка
+description: Что-то не работает или работает не так
+labels: [bug]
+body:
+  - type: textarea
+    id: what
+    attributes:
+      label: Что случилось
+      description: Что делали и что увидели. Снимок экрана — перетащите сюда.
+      placeholder: На телефоне раздел съезжает за край
+    validations:
+      required: true
+  - type: dropdown
+    id: device
+    attributes:
+      label: Где
+      options:
+        - Компьютер
+        - Телефон
+        - И там, и там
+  - type: input
+    id: browser
+    attributes:
+      label: Браузер
+      placeholder: Chrome, Яндекс, Safari…
